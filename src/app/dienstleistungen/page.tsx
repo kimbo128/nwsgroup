@@ -143,7 +143,13 @@ export default function DienstleistungenPage() {
         <FadeIn delay={0.2}>
           <div className="text-center">
             <Button size="lg" asChild>
-              <Link href="/fahrzeuge">Fahrzeuge ansehen</Link>
+              <a 
+                href="https://www.autoscout24.ch/de/s/seller-2328369"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Fahrzeuge auf AutoScout24 ansehen
+              </a>
             </Button>
           </div>
         </FadeIn>

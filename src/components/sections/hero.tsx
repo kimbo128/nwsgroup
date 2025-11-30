@@ -91,10 +91,15 @@ export function Hero() {
                   className="group h-12 px-8 text-base font-semibold"
                   asChild
                 >
-                  <Link href="/fahrzeuge" className="flex items-center gap-2">
+                  <a 
+                    href="https://www.autoscout24.ch/de/s/seller-2328369"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
                     Fahrzeuge ansehen
                     <ArrowRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
+                  </a>
                 </Button>
               </motion.div>
 
