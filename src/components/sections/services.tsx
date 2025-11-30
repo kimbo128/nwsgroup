@@ -16,15 +16,15 @@ const iconMap = {
 
 export function Services() {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
         <FadeIn>
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">
+          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-bold">
             Unsere Dienstleistungen
           </h2>
         </FadeIn>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((service, index) => {
             const Icon = iconMap[service.icon as keyof typeof iconMap] || Car
 
@@ -35,14 +35,14 @@ export function Services() {
                   transition={{ duration: 0.2 }}
                 >
                   <Card className="h-full transition-shadow hover:shadow-lg">
-                    <CardHeader>
-                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <Icon className="h-6 w-6 text-primary" />
+                    <CardHeader className="p-4 sm:p-6">
+                      <div className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-primary/10">
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                       </div>
-                      <CardTitle>{service.title}</CardTitle>
-                      <CardDescription>{service.description}</CardDescription>
+                      <CardTitle className="text-lg sm:text-xl">{service.title}</CardTitle>
+                      <CardDescription className="text-sm">{service.description}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4 sm:p-6 pt-0">
                       <Link
                         href={service.link}
                         className="text-sm font-medium text-primary hover:underline"

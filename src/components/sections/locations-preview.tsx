@@ -9,26 +9,26 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react"
 
 export function LocationsPreview() {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
         <FadeIn>
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">
+          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-bold">
             Unsere Standorte
           </h2>
         </FadeIn>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
           {LOCATIONS.map((location, index) => (
             <FadeIn key={location.name} delay={index * 0.2}>
               <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary" />
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     {location.name}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2 text-sm">
+                <CardContent className="p-4 sm:p-6 pt-0 space-y-3 sm:space-y-4">
+                  <div className="space-y-2 text-xs sm:text-sm">
                     <p className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
                       {location.address}
@@ -58,7 +58,7 @@ export function LocationsPreview() {
                       )}
                     </p>
                   </div>
-                  <Button className="w-full" variant="outline" asChild>
+                  <Button className="w-full h-9 sm:h-10 text-sm sm:text-base" variant="outline" asChild>
                     <Link href="/standorte">Route planen</Link>
                   </Button>
                 </CardContent>

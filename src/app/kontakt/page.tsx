@@ -81,7 +81,7 @@ function KontaktPageContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
       <FadeIn>
         <h1 className="mb-4 text-center text-4xl font-bold">Kontakt</h1>
         <p className="mb-12 text-center text-xl text-muted-foreground">

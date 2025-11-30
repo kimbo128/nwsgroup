@@ -41,21 +41,21 @@ export async function VehiclesSection() {
   }
 
   return (
-    <section className="bg-muted/50 py-20">
-      <div className="container mx-auto px-4">
+    <section className="bg-muted/50 py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
         <FadeIn>
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">
+          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-bold">
             Unsere aktuellen Fahrzeuge
           </h2>
         </FadeIn>
 
         {vehicles.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
               {vehicles.map((vehicle, index) => (
                 <FadeIn key={vehicle.id} delay={index * 0.1}>
                   <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-                    <div className="relative h-48 w-full">
+                    <div className="relative h-40 sm:h-48 w-full">
                       {vehicle.images.length > 0 ? (
                         <Image
                           src={vehicle.images[0]}
@@ -72,23 +72,23 @@ export async function VehiclesSection() {
                         <Badge className="absolute right-2 top-2">NEU</Badge>
                       )}
                     </div>
-                    <CardHeader>
-                      <h3 className="text-xl font-semibold">
+                    <CardHeader className="p-4 sm:p-6">
+                      <h3 className="text-lg sm:text-xl font-semibold">
                         {vehicle.make} {vehicle.model}
                       </h3>
-                      <p className="text-2xl font-bold text-primary">
+                      <p className="text-xl sm:text-2xl font-bold text-primary">
                         CHF {vehicle.price.toLocaleString("de-CH")}
                       </p>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-1 text-sm text-muted-foreground">
+                    <CardContent className="p-4 sm:p-6 pt-0">
+                      <div className="space-y-1 text-xs sm:text-sm text-muted-foreground">
                         <p>Baujahr: {vehicle.year}</p>
                         <p>Kilometerstand: {vehicle.mileage.toLocaleString("de-CH")} km</p>
                         <p>Kraftstoff: {vehicle.fuel}</p>
                       </div>
                     </CardContent>
-                    <CardFooter>
-                      <Button className="w-full" asChild>
+                    <CardFooter className="p-4 sm:p-6 pt-0">
+                      <Button className="w-full h-9 sm:h-10 text-sm sm:text-base" asChild>
                         <Link href={`/fahrzeuge#${vehicle.id}`}>Details</Link>
                       </Button>
                     </CardFooter>

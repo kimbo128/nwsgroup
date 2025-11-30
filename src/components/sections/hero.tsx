@@ -24,9 +24,9 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center text-white">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center text-white">
         <FadeIn delay={0.2}>
-          <h1 className="mb-4 text-4xl font-bold md:text-6xl lg:text-7xl">
+          <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2">
             Ihr Partner für Autoankauf,
             <br />
             -verkauf & Karosseriearbeiten
@@ -34,17 +34,17 @@ export function Hero() {
         </FadeIn>
 
         <FadeIn delay={0.4}>
-          <p className="mb-8 text-xl md:text-2xl">
+          <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl lg:text-2xl px-2">
             An zwei Standorten in Pratteln und Dornach für Sie da
           </p>
         </FadeIn>
 
         <FadeIn delay={0.6}>
-          <div className="mb-8 flex flex-col items-center gap-4 sm:flex-row">
-            <Button size="lg" asChild>
+          <div className="mb-6 sm:mb-8 flex flex-col items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-md sm:flex-row sm:max-w-none px-2">
+            <Button size="lg" className="w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base" asChild>
               <Link href="/kontakt?type=verkauf">Auto verkaufen</Link>
             </Button>
-            <Button size="lg" variant="outline" className="bg-white/10 text-white hover:bg-white/20" asChild>
+            <Button size="lg" variant="outline" className="bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base" asChild>
               <Link href="/fahrzeuge">Fahrzeuge ansehen</Link>
             </Button>
           </div>
@@ -53,9 +53,9 @@ export function Hero() {
         <FadeIn delay={0.8}>
           <a
             href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-            className="flex items-center gap-2 text-xl font-semibold hover:text-primary transition-colors"
+            className="flex items-center gap-2 text-base sm:text-lg md:text-xl font-semibold hover:text-primary transition-colors px-2"
           >
-            <Phone className="h-6 w-6" />
+            <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
             {CONTACT_PHONE}
           </a>
         </FadeIn>

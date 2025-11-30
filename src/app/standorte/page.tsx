@@ -13,21 +13,21 @@ const Map = dynamic(() => import("@/components/map"), { ssr: false })
 
 export default function StandortePage() {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
       <FadeIn>
-        <h1 className="mb-4 text-center text-4xl font-bold">Unsere Standorte</h1>
-        <p className="mb-12 text-center text-xl text-muted-foreground">
+        <h1 className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl md:text-4xl font-bold">Unsere Standorte</h1>
+        <p className="mb-8 sm:mb-10 md:mb-12 text-center text-base sm:text-lg md:text-xl text-muted-foreground px-2">
           Besuchen Sie uns an einem unserer beiden Standorte
         </p>
       </FadeIn>
 
       {/* Map */}
-      <div className="mb-12 h-[500px] w-full overflow-hidden rounded-lg">
+      <div className="mb-8 sm:mb-10 md:mb-12 h-[300px] sm:h-[400px] md:h-[500px] w-full overflow-hidden rounded-lg">
         <Map />
       </div>
 
       {/* Location Cards */}
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 md:grid-cols-2">
         {LOCATIONS.map((location, index) => (
           <FadeIn key={location.name} delay={index * 0.2}>
             <Card>
