@@ -1,6 +1,9 @@
 export interface Location {
+  id?: string
   name: string
   address: string
+  zip?: string
+  city?: string
   phone: string
   whatsapp: string
   email: string

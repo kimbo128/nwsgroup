@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
-import * as cheerio from "cheerio"
+import puppeteer from "puppeteer-core"
+import chromium from "@sparticuz/chromium"
 
 // Force dynamic rendering to prevent build-time analysis
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+// Increase timeout for serverless function
+export const maxDuration = 60
 
 const AUTOSCOUT24_SELLER_URL =
   process.env.AUTOSCOUT24_SELLER_URL ||
@@ -25,207 +29,218 @@ interface VehicleData {
   images: string[]
 }
 
+async function getBrowser() {
+  // Check if running locally (development) or on server (production)
+  const isLocal = process.env.NODE_ENV === 'development' || process.env.LOCAL_CHROME_PATH
+
+  if (isLocal) {
+    // Local development - use local Chrome
+    const executablePath = process.env.LOCAL_CHROME_PATH || 
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+    
+    return puppeteer.launch({
+      executablePath,
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    })
+  } else {
+    // Production (Railway, Vercel, etc.) - use @sparticuz/chromium
+    return puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
+    })
+  }
+}
+
 async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
+  console.log(`Fetching from: ${AUTOSCOUT24_SELLER_URL}`)
+  
+  const browser = await getBrowser()
+  
   try {
-    console.log(`Fetching from: ${AUTOSCOUT24_SELLER_URL}`)
+    const page = await browser.newPage()
     
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+    // Set a realistic viewport
+    await page.setViewport({ width: 1920, height: 1080 })
     
-    const response = await fetch(AUTOSCOUT24_SELLER_URL, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "de-CH,de;q=0.9,en;q=0.8",
-      },
-      signal: controller.signal,
+    // Set user agent to look like a real browser
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    )
+    
+    // Set extra headers
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'de-CH,de;q=0.9,en;q=0.8',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
     })
 
-    clearTimeout(timeoutId)
+    // Navigate to the page
+    console.log('Navigating to AutoScout24...')
+    await page.goto(AUTOSCOUT24_SELLER_URL, { 
+      waitUntil: 'networkidle2',
+      timeout: 45000 
+    })
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
-    }
-
-    const html = await response.text()
+    // Wait for content to load
+    await page.waitForSelector('body', { timeout: 10000 })
     
-    if (!html || html.length < 100) {
-      throw new Error("Received empty or invalid HTML response")
-    }
-    
-    console.log(`Received ${html.length} bytes of HTML`)
-    
-    const $ = cheerio.load(html)
+    // Small delay to let JavaScript render
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
-    const vehicles: VehicleData[] = []
-
-    // Parse vehicle listings from AutoScout24 HTML
-    // Try multiple selectors for robustness
-    const selectors = [
-      ".cldt-summary-full-item",
-      "[data-item-name='cldt-summary-full-item']",
-      ".cldt-summary-full-item-main",
-      "article[data-vehicle-id]",
-      ".cldt-summary-full-item-main article",
-    ]
-
-    let foundElements = $()
-    for (const selector of selectors) {
-      foundElements = $(selector)
-      if (foundElements.length > 0) {
-        console.log(`Found ${foundElements.length} vehicles using selector: ${selector}`)
-        break
+    // Extract vehicle data from the page
+    const vehicles = await page.evaluate(() => {
+      const results: any[] = []
+      
+      // Try multiple selectors for vehicle listings
+      const selectors = [
+        'article[data-testid]',
+        '[data-testid="listing-card"]',
+        '.cldt-summary-full-item',
+        'article',
+        '[class*="ListItem"]',
+        '[class*="listing"]',
+      ]
+      
+      let elements: Element[] = []
+      for (const selector of selectors) {
+        const found = document.querySelectorAll(selector)
+        if (found.length > 0) {
+          elements = Array.from(found)
+          console.log(`Found ${found.length} elements with selector: ${selector}`)
+          break
+        }
       }
-    }
 
-    // Fallback: try to find any article or listing element
-    if (foundElements.length === 0) {
-      foundElements = $("article, [data-vehicle-id], .listing-item, .vehicle-item")
-      console.log(`Fallback: Found ${foundElements.length} potential vehicle elements`)
-    }
-
-    foundElements.each((index, element) => {
-      try {
-        const $el = $(element)
-
-        // Extract vehicle ID from URL, data attribute, or generate one
-        let autoscoutId = $el.attr("data-vehicle-id") || 
-                         $el.attr("data-id") ||
-                         $el.find("[data-vehicle-id]").attr("data-vehicle-id")
-        
-        const linkElement = $el.find("a[href*='/fahrzeuge/'], a[href*='/de/d/']").first()
-        const href = linkElement.attr("href") || ""
-        
-        if (!autoscoutId && href) {
-          const idMatch = href.match(/\/(\d+)/)
-          autoscoutId = idMatch ? idMatch[1] : `vehicle-${index}-${Date.now()}`
-        } else if (!autoscoutId) {
-          autoscoutId = `vehicle-${index}-${Date.now()}`
-        }
-
-        const autoscoutUrl = href && href.startsWith("http")
-          ? href
-          : href
-          ? `https://www.autoscout24.ch${href}`
-          : `https://www.autoscout24.ch/de/d/${autoscoutId}`
-
-        // Extract make and model - try multiple selectors
-        const titleSelectors = [
-          ".cldt-summary-title",
-          "h2",
-          "[data-vehicle-title]",
-          ".vehicle-title",
-          "a[href*='/fahrzeuge/']",
-        ]
-        let title = ""
-        for (const sel of titleSelectors) {
-          title = $el.find(sel).first().text().trim()
-          if (title) break
-        }
-        
-        if (!title) {
-          title = $el.text().substring(0, 100).trim()
-        }
-
-        const titleParts = title.split(/\s+/)
-        const make = titleParts[0] || "Unbekannt"
-        const model = titleParts.slice(1).join(" ") || "Unbekannt"
-
-        // Extract price - try multiple selectors
-        const priceSelectors = [
-          ".cldt-price",
-          "[data-price]",
-          ".price",
-          ".vehicle-price",
-        ]
-        let priceText = ""
-        for (const sel of priceSelectors) {
-          priceText = $el.find(sel).first().text().trim()
-          if (priceText) break
-        }
-        
-        const price = priceText
-          ? parseFloat(priceText.replace(/[^\d,.]/g, "").replace(",", ".")) || 0
-          : 0
-
-        // Extract year - try to find in various places
-        const allText = $el.text()
-        const yearMatch = allText.match(/\b(19|20)\d{2}\b/)
-        const year = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear()
-
-        // Extract mileage
-        const mileageMatch = allText.match(/([\d.'\s]+)\s*km/i)
-        const mileage = mileageMatch
-          ? parseInt(mileageMatch[1].replace(/[.'\s]/g, ""))
-          : 0
-
-        // Extract fuel type
-        let fuel = "Benzin"
-        const fuelText = allText.toLowerCase()
-        if (fuelText.includes("diesel")) fuel = "Diesel"
-        else if (fuelText.includes("elektro") || fuelText.includes("electric")) fuel = "Elektro"
-        else if (fuelText.includes("hybrid")) fuel = "Hybrid"
-        else if (fuelText.includes("benzin") || fuelText.includes("petrol") || fuelText.includes("gasoline")) fuel = "Benzin"
-
-        // Extract transmission
-        let transmission = "Manuell"
-        if (fuelText.includes("automatik") || fuelText.includes("automatic")) transmission = "Automatik"
-
-        // Extract images - try multiple selectors
-        const images: string[] = []
-        const imageSelectors = [
-          "img[src*='autoscout24'], img[data-src*='autoscout24']",
-          "img",
-          "[data-image-src]",
-        ]
-        
-        for (const sel of imageSelectors) {
-          $el.find(sel).each((_, img) => {
-            const src = $(img).attr("src") || 
-                       $(img).attr("data-src") || 
-                       $(img).attr("data-image-src") ||
-                       $(img).attr("data-lazy-src")
-            if (src && !src.includes("placeholder") && !src.includes("logo") && !src.includes("icon")) {
-              const fullUrl = src.startsWith("http") ? src : src.startsWith("//") ? `https:${src}` : `https://www.autoscout24.ch${src}`
-              if (!images.includes(fullUrl)) {
-                images.push(fullUrl)
+      elements.forEach((el, index) => {
+        try {
+          // Get all text content for parsing
+          const allText = el.textContent || ''
+          
+          // Find links to vehicle detail pages
+          const links = el.querySelectorAll('a[href*="/d/"], a[href*="/fahrzeuge/"]')
+          let href = ''
+          let autoscoutId = ''
+          
+          links.forEach(link => {
+            const linkHref = link.getAttribute('href') || ''
+            if (linkHref.includes('/d/') || linkHref.includes('/fahrzeuge/')) {
+              href = linkHref
+              // Extract ID from URL
+              const idMatch = linkHref.match(/\/d\/([^/?]+)/) || linkHref.match(/\/(\d+)/)
+              if (idMatch) {
+                autoscoutId = idMatch[1]
               }
             }
           })
-          if (images.length > 0) break
-        }
+          
+          if (!autoscoutId) {
+            autoscoutId = `vehicle-${index}-${Date.now()}`
+          }
+          
+          const autoscoutUrl = href.startsWith('http') 
+            ? href 
+            : href 
+              ? `https://www.autoscout24.ch${href}` 
+              : `https://www.autoscout24.ch/de/d/${autoscoutId}`
 
-        // Only add if we have minimum required data
-        if (make && make !== "Unbekannt" && price > 0) {
-          vehicles.push({
-            autoscoutId,
-            autoscoutUrl,
-            make,
-            model: model || "Unbekannt",
-            year,
-            price,
-            mileage,
-            fuel,
-            transmission,
-            images: images.slice(0, 10), // Limit to 10 images
+          // Extract title/make/model
+          const titleEl = el.querySelector('h2, h3, [class*="title"], [class*="Title"]')
+          const title = titleEl?.textContent?.trim() || ''
+          const titleParts = title.split(/\s+/)
+          const make = titleParts[0] || 'Unbekannt'
+          const model = titleParts.slice(1).join(' ') || 'Unbekannt'
+
+          // Extract price
+          const priceEl = el.querySelector('[class*="price"], [class*="Price"], [data-testid*="price"]')
+          let priceText = priceEl?.textContent || ''
+          // Also try to find price in the text
+          if (!priceText) {
+            const priceMatch = allText.match(/CHF\s*([\d'.,\s]+)/)
+            priceText = priceMatch ? priceMatch[1] : ''
+          }
+          const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0
+
+          // Extract year
+          const yearMatch = allText.match(/\b(19|20)\d{2}\b/)
+          const year = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear()
+
+          // Extract mileage
+          const mileageMatch = allText.match(/([\d'.\s]+)\s*km/i)
+          const mileage = mileageMatch 
+            ? parseInt(mileageMatch[1].replace(/['\s.]/g, '')) 
+            : 0
+
+          // Extract fuel type
+          let fuel = 'Benzin'
+          const fuelText = allText.toLowerCase()
+          if (fuelText.includes('diesel')) fuel = 'Diesel'
+          else if (fuelText.includes('elektro') || fuelText.includes('electric')) fuel = 'Elektro'
+          else if (fuelText.includes('hybrid')) fuel = 'Hybrid'
+
+          // Extract transmission
+          let transmission = 'Manuell'
+          if (fuelText.includes('automatik') || fuelText.includes('automatic') || fuelText.includes('automat')) {
+            transmission = 'Automatik'
+          }
+
+          // Extract images
+          const images: string[] = []
+          el.querySelectorAll('img').forEach(img => {
+            const src = img.src || img.getAttribute('data-src') || img.getAttribute('data-lazy-src')
+            if (src && !src.includes('placeholder') && !src.includes('logo') && !src.includes('icon') && src.includes('http')) {
+              if (!images.includes(src)) {
+                images.push(src)
+              }
+            }
           })
+
+          // Only add if we have minimum required data
+          if (make && make !== 'Unbekannt' && price > 0) {
+            results.push({
+              autoscoutId,
+              autoscoutUrl,
+              make,
+              model: model || 'Unbekannt',
+              year,
+              price,
+              mileage,
+              fuel,
+              transmission,
+              images: images.slice(0, 10),
+            })
+          }
+        } catch (err) {
+          console.error('Error parsing element:', err)
         }
-      } catch (error) {
-        console.error(`Error parsing vehicle ${index}:`, error)
-      }
+      })
+
+      return results
     })
 
+    console.log(`Extracted ${vehicles.length} vehicles from page`)
+    
+    // If no vehicles found, try to get page content for debugging
+    if (vehicles.length === 0) {
+      const pageContent = await page.content()
+      console.log('Page content length:', pageContent.length)
+      
+      // Check if we're blocked or on wrong page
+      if (pageContent.includes('blocked') || pageContent.includes('captcha')) {
+        throw new Error('Page appears to be blocked or requires captcha')
+      }
+    }
+
     return vehicles
-  } catch (error) {
-    console.error("Error fetching vehicles from AutoScout24:", error)
-    throw error
+  } finally {
+    await browser.close()
   }
 }
 
 export async function POST(request: Request) {
   try {
-    console.log("Starting vehicle sync from AutoScout24...")
+    console.log("Starting vehicle sync from AutoScout24 with Puppeteer...")
     console.log(`Using URL: ${AUTOSCOUT24_SELLER_URL}`)
 
     let vehicles: VehicleData[]
@@ -355,4 +370,3 @@ export async function GET() {
     endpoint: "/api/vehicles/sync",
   })
 }
-

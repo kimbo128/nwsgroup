@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Outfit, Playfair_Display } from "next/font/google"
 import "./globals.css"
 import "leaflet/dist/leaflet.css"
 import { ThemeProvider } from "@/components/providers/theme-provider"
@@ -7,9 +7,16 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { SessionProvider } from "@/components/providers/session-provider"
 
-const inter = Inter({ 
+const outfit = Outfit({ 
   subsets: ["latin"],
-  variable: "--font-sans"
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700", "800"]
+})
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700", "800"]
 })
 
 export const metadata: Metadata = {
@@ -25,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>
+      <body className={`${outfit.variable} ${playfair.variable} font-sans antialiased`}>
         <SessionProvider>
           <ThemeProvider
             attribute="class"

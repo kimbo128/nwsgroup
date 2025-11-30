@@ -2,8 +2,11 @@ import { Location, Service } from '@/types'
 
 export const LOCATIONS: Location[] = [
   {
+    id: 'pratteln',
     name: 'Pratteln',
-    address: 'Hauptstrasse 123, 4133 Pratteln',
+    address: 'Hauptstrasse 123',
+    zip: '4133',
+    city: 'Pratteln',
     phone: '+41618219292',
     whatsapp: '+41618219292',
     email: 'pratteln@nwsgroup.ch',
@@ -14,8 +17,11 @@ export const LOCATIONS: Location[] = [
     coordinates: [47.5207, 7.6936],
   },
   {
+    id: 'dornach',
     name: 'Dornach',
-    address: 'Bahnhofstrasse 45, 4143 Dornach',
+    address: 'Bahnhofstrasse 45',
+    zip: '4143',
+    city: 'Dornach',
     phone: '+41618219595',
     whatsapp: '+41618219595',
     email: 'dornach@nwsgroup.ch',
@@ -58,6 +64,8 @@ export const SERVICES: Service[] = [
 ]
 
 export const CONTACT_PHONE = '061 821 92 92'
+export const CONTACT_EMAIL = 'info@nwsgroup.ch'
+export const WHATSAPP_NUMBER = '41795511245'
 export const WHATSAPP_GENERAL = '+41795511245'
 export const TELEGRAM_BOT_URL = 'https://t.me/NWSGroupBot'
 export const AUTOSCOUT24_URL = 'https://www.autoscout24.ch/de/s/seller-2328369'

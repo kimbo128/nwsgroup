@@ -1,26 +1,175 @@
+"use client"
+
 import Image from "next/image"
+import Link from "next/link"
+import { MapPin, Phone, Mail, Clock, ArrowUpRight, Facebook, Instagram, Linkedin } from "lucide-react"
+import { motion } from "framer-motion"
+import { CONTACT_PHONE, CONTACT_EMAIL, LOCATIONS } from "@/lib/constants"
+
+const quickLinks = [
+  { name: "Fahrzeuge", href: "/fahrzeuge" },
+  { name: "Dienstleistungen", href: "/dienstleistungen" },
+  { name: "Standorte", href: "/standorte" },
+  { name: "Galerie", href: "/galerie" },
+  { name: "Kontakt", href: "/kontakt" },
+]
+
+const legalLinks = [
+  { name: "Impressum", href: "/impressum" },
+  { name: "Datenschutz", href: "/datenschutz" },
+]
 
 export function Footer() {
-  return (
-    <footer className="border-t bg-muted/50">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
-        <div className="flex flex-col items-center justify-center text-center">
-          <Image
-            src="/logo.png"
-            alt="NWS Group AG"
-            width={120}
-            height={120}
-            className="h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 object-contain mb-4"
-          />
-          <span className="font-semibold text-lg sm:text-xl md:text-2xl">NWS Group AG</span>
-        </div>
+  const currentYear = new Date().getFullYear()
 
-        {/* Bottom Bar */}
-        <div className="mt-6 sm:mt-8 border-t pt-6 sm:pt-8 text-center text-xs sm:text-sm text-muted-foreground">
-          <p>© 2025 NWS Group AG - Alle Rechte vorbehalten</p>
+  return (
+    <footer className="relative bg-card border-t border-border/50 overflow-hidden">
+      {/* Decorative background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute -top-32 -right-32 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          {/* Brand Column */}
+          <div className="lg:col-span-1">
+            <Link href="/" className="inline-flex items-center gap-3 group mb-6">
+              <Image
+                src="/logo.png"
+                alt="NWS Group AG"
+                width={64}
+                height={64}
+                className="h-14 w-14 object-contain group-hover:scale-105 transition-transform"
+              />
+              <div>
+                <span className="text-xl font-display font-bold block">NWS Group</span>
+                <span className="text-sm text-muted-foreground">Autohandel & Karosserie</span>
+              </div>
+            </Link>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+              Ihr vertrauenswürdiger Partner für Autoankauf, -verkauf und professionelle Karosseriearbeiten in der Region Basel.
+            </p>
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
+              {[
+                { icon: Facebook, href: "#", label: "Facebook" },
+                { icon: Instagram, href: "#", label: "Instagram" },
+                { icon: Linkedin, href: "#", label: "LinkedIn" },
+              ].map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  whileHover={{ y: -3 }}
+                  className="flex items-center justify-center w-10 h-10 rounded-xl bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+              Navigation
+            </h4>
+            <ul className="space-y-3">
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-sm hover:text-primary transition-colors"
+                  >
+                    <span>{link.name}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+              Kontakt
+            </h4>
+            <ul className="space-y-4">
+              <li>
+                <a
+                  href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
+                  className="group flex items-start gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Phone className="w-5 h-5 mt-0.5 text-primary" />
+                  <span>{CONTACT_PHONE}</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  className="group flex items-start gap-3 text-sm hover:text-primary transition-colors"
+                >
+                  <Mail className="w-5 h-5 mt-0.5 text-primary" />
+                  <span>{CONTACT_EMAIL}</span>
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-sm">
+                <Clock className="w-5 h-5 mt-0.5 text-primary" />
+                <div>
+                  <p>Mo-Fr: 08:00 - 18:00</p>
+                  <p>Sa: 08:00 - 16:00</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Locations */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+              Standorte
+            </h4>
+            <ul className="space-y-4">
+              {LOCATIONS.map((location) => (
+                <li key={location.id}>
+                  <div className="flex items-start gap-3 text-sm">
+                    <MapPin className="w-5 h-5 mt-0.5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold">{location.name}</p>
+                      <p className="text-muted-foreground">{location.address}</p>
+                      <p className="text-muted-foreground">{location.zip} {location.city}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="relative z-10 border-t border-border/50">
+        <div className="container mx-auto px-4 sm:px-6 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              © {currentYear} NWS Group AG. Alle Rechte vorbehalten.
+            </p>
+            <div className="flex items-center gap-6">
+              {legalLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </footer>
   )
 }
-
