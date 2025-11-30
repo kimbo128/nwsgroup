@@ -7,18 +7,38 @@ import { FadeIn } from "@/components/animations/fade-in"
 import { AUTOSCOUT24_URL } from "@/lib/constants"
 import { prisma } from "@/lib/db"
 
+export const dynamic = 'force-dynamic'
+
 export async function VehiclesSection() {
   // Fetch featured vehicles
-  const vehicles = await prisma.vehicle.findMany({
+  let vehicles: Array<{
+    id: string
+    make: string
+    model: string
+    price: number
+    year: number
+    mileage: number
+    fuel: string
+    images: string[]
+    featured: boolean
+  }> = []
+  
+  try {
+    vehicles = await prisma.vehicle.findMany({
     where: {
       status: "available",
       featured: true,
     },
-    take: 4,
-    orderBy: {
-      createdAt: "desc",
-    },
-  })
+      take: 4,
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+  } catch (error) {
+    console.error("Error fetching vehicles:", error)
+    // Return empty array if database is not available during build
+    vehicles = []
+  }
 
   return (
     <section className="bg-muted/50 py-20">

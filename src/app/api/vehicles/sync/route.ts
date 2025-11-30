@@ -126,6 +126,8 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   try {
     // Optional: Add authentication/authorization check here
