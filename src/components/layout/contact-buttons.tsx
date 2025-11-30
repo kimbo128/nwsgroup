@@ -12,13 +12,13 @@ export function ContactButtons({ variant = "default" }: { variant?: "default" | 
   const isCompact = variant === "compact"
 
   return (
-    <div className={`flex items-center gap-2 ${isCompact ? "flex-wrap" : ""}`}>
+    <div className={`flex items-center gap-1.5 sm:gap-2 ${isCompact ? "flex-wrap" : ""}`}>
       {/* Phone Dropdown */}
       <DropdownMenu
         trigger={
-          <Button variant="outline" size={isCompact ? "sm" : "default"}>
-            <Phone className="h-4 w-4 mr-2" />
-            {!isCompact && "Anrufen"}
+          <Button variant="outline" size={isCompact ? "sm" : "default"} className="h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
+            <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            {!isCompact && <span className="hidden sm:inline">Anrufen</span>}
           </Button>
         }
       >
@@ -41,9 +41,9 @@ export function ContactButtons({ variant = "default" }: { variant?: "default" | 
       {/* WhatsApp Dropdown */}
       <DropdownMenu
         trigger={
-          <Button variant="outline" size={isCompact ? "sm" : "default"}>
-            <MessageCircle className="h-4 w-4 mr-2" />
-            {!isCompact && "WhatsApp"}
+          <Button variant="outline" size={isCompact ? "sm" : "default"} className="h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3">
+            <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            {!isCompact && <span className="hidden sm:inline">WhatsApp</span>}
           </Button>
         }
       >
@@ -83,15 +83,16 @@ export function ContactButtons({ variant = "default" }: { variant?: "default" | 
       <Button
         variant="outline"
         size={isCompact ? "sm" : "default"}
+        className="h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3"
         asChild
       >
         <a
           href={TELEGRAM_BOT_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2"
+          className="flex items-center gap-1 sm:gap-2"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           {!isCompact && <span className="hidden sm:inline">Telegram</span>}
         </a>
       </Button>

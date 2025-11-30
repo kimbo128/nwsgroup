@@ -36,27 +36,28 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full">
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
+        <nav className="flex h-14 sm:h-16 items-center justify-between rounded-lg sm:rounded-xl border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm mt-2 sm:mt-3 px-3 sm:px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
           <Image
             src="/logo.png"
             alt="NWS Group AG Logo"
             width={40}
             height={40}
-            className="h-10 w-10 object-contain"
+            className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
           />
-          <span className="hidden font-bold sm:inline-block">NWS Group AG</span>
+          <span className="hidden font-bold text-sm sm:text-base md:inline-block">NWS Group AG</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex md:items-center md:space-x-6">
+        <div className="hidden md:flex md:items-center md:space-x-4 lg:space-x-6">
           {navigation.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="text-sm font-medium transition-colors hover:text-primary px-2 py-1 rounded-md hover:bg-accent/50"
             >
               {item.name}
             </Link>
@@ -64,7 +65,7 @@ export function Header() {
         </div>
 
         {/* Right Side Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Theme Toggle */}
           {mounted && (
             <Button
@@ -72,11 +73,12 @@ export function Header() {
               size="icon"
               onClick={toggleTheme}
               aria-label="Toggle theme"
+              className="h-9 w-9 sm:h-10 sm:w-10"
             >
               {resolvedTheme === "dark" ? (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
               )}
             </Button>
           )}
@@ -90,8 +92,8 @@ export function Header() {
           {session ? (
             <DropdownMenu
               trigger={
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="h-9 w-9 sm:h-10 sm:w-10">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               }
             >
@@ -103,7 +105,7 @@ export function Header() {
               </DropdownMenuItem>
             </DropdownMenu>
           ) : (
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="hidden sm:flex h-9 text-xs sm:text-sm px-3">
               <Link href="/login">Anmelden</Link>
             </Button>
           )}
@@ -112,7 +114,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-9 w-9 sm:h-10 sm:w-10"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? (
@@ -122,25 +124,35 @@ export function Header() {
             )}
           </Button>
         </div>
-      </nav>
+        </nav>
+      </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-t md:hidden">
-          <div className="container mx-auto space-y-1 px-4 py-4">
+        <div className="md:hidden mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 mt-2">
+          <div className="rounded-lg sm:rounded-xl border bg-background/95 backdrop-blur shadow-sm px-4 py-4 space-y-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="block rounded-md px-3 py-2 text-base font-medium hover:bg-accent"
+                className="block rounded-md px-3 py-2.5 text-base font-medium hover:bg-accent transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4">
+            <div className="pt-3 border-t mt-3">
               <ContactButtons variant="compact" />
             </div>
+            {!session && (
+              <div className="pt-2">
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                    Anmelden
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
