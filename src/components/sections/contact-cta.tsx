@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/animations/fade-in"
-import { MessageCircle } from "lucide-react"
+import { MessageCircle, Mail } from "lucide-react"
 
 export function ContactCTA() {
   return (
@@ -18,7 +18,10 @@ export function ContactCTA() {
           </p>
           <div className="flex flex-col items-stretch sm:items-center justify-center gap-3 sm:gap-4 sm:flex-row max-w-md sm:max-w-none mx-auto">
             <Button size="lg" variant="secondary" className="w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base" asChild>
-              <Link href="/kontakt">Kontaktformular</Link>
+              <a href="mailto:info@nwsgroup.ch">
+                <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                E-Mail schreiben
+              </a>
             </Button>
             <Button
               size="lg"
@@ -28,7 +31,7 @@ export function ContactCTA() {
             >
               <Link href="/kontakt">
                 <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                WhatsApp Chat
+                Kontakt
               </Link>
             </Button>
           </div>
