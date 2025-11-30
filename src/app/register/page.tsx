@@ -30,6 +30,12 @@ export default function RegisterPage() {
     setIsLoading(true)
     setError(null)
 
+    if (!formData.privacy) {
+      setError("Sie müssen der Datenschutzerklärung zustimmen")
+      setIsLoading(false)
+      return
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwörter stimmen nicht überein")
       setIsLoading(false)
@@ -38,6 +44,12 @@ export default function RegisterPage() {
 
     if (formData.password.length < 8) {
       setError("Passwort muss mindestens 8 Zeichen lang sein")
+      setIsLoading(false)
+      return
+    }
+
+    if (!formData.firstName || !formData.lastName) {
+      setError("Vorname und Nachname sind erforderlich")
       setIsLoading(false)
       return
     }
