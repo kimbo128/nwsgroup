@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -49,24 +49,7 @@ export default function FahrzeugePage() {
     fetchVehicles()
   }, [])
 
-  useEffect(() => {
-    applyFilters()
-  }, [vehicles, filters])
-
-  const fetchVehicles = async () => {
-    try {
-      const response = await fetch("/api/vehicles")
-      const data = await response.json()
-      setVehicles(data)
-      setFilteredVehicles(data)
-    } catch (error) {
-      console.error("Error fetching vehicles:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...vehicles]
 
     if (filters.search) {
@@ -95,7 +78,11 @@ export default function FahrzeugePage() {
     )
 
     setFilteredVehicles(filtered)
-  }
+  }, [vehicles, filters])
+
+  useEffect(() => {
+    applyFilters()
+  }, [applyFilters])
 
   const uniqueMakes = Array.from(new Set(vehicles.map((v) => v.make))).sort()
 
