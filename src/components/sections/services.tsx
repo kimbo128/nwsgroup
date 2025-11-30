@@ -37,11 +37,35 @@ export function Services() {
                   >
                   <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group">
                     <CardHeader className="p-4 sm:p-6">
-                      <div className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                      </div>
-                      <CardTitle className="text-lg sm:text-xl">{service.title}</CardTitle>
-                      <CardDescription className="text-sm">{service.description}</CardDescription>
+                      <FloatingIcon delay={index * 0.2}>
+                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 md:h-14 md:w-14 group-hover:from-primary/30 group-hover:to-primary/20 transition-all duration-300 relative">
+                          <Icon className="h-6 w-6 text-primary md:h-7 md:w-7 group-hover:scale-110 transition-transform duration-300 relative z-10" />
+                          <motion.div
+                            className="absolute inset-0 rounded-xl bg-primary/20"
+                            animate={{
+                              scale: [1, 1.2, 1],
+                              opacity: [0.5, 0, 0.5],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: index * 0.3,
+                            }}
+                          />
+                        </div>
+                      </FloatingIcon>
+                      <CardTitle className="text-xl md:text-2xl font-bold mb-2 flex items-center gap-2">
+                        {service.title}
+                        {index === 0 && (
+                          <motion.span
+                            animate={{ rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                          >
+                            <Sparkles className="h-4 w-4 text-accent" />
+                          </motion.span>
+                        )}
+                      </CardTitle>
+                      <CardDescription className="text-sm leading-relaxed">{service.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 sm:p-6 pt-0">
                       <Link
