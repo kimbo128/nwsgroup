@@ -37,7 +37,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
+      <div className="mx-auto max-w-[95%] xl:max-w-[98%] px-3 sm:px-4 lg:px-6">
           <nav className="flex h-20 sm:h-24 md:h-28 items-center justify-between rounded-xl sm:rounded-2xl border-2 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-modern-lg mt-2 sm:mt-3 px-3 sm:px-4 ring-1 ring-black/5">
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0">
@@ -128,7 +128,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 mt-2">
+        <div className="md:hidden mx-auto max-w-[95%] xl:max-w-[98%] px-3 sm:px-4 lg:px-6 mt-2">
           <div className="rounded-lg sm:rounded-xl border bg-background/95 backdrop-blur shadow-sm px-4 py-4 space-y-1">
             {navigation.map((item) => (
               <Link
