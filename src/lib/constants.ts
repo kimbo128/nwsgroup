@@ -68,5 +68,5 @@ export const CONTACT_EMAIL = 'info@nwsgroup.ch'
 export const WHATSAPP_NUMBER = '41795511245'
 export const WHATSAPP_GENERAL = '+41795511245'
 export const TELEGRAM_BOT_URL = 'https://t.me/NWSGroupBot'
-export const AUTOSCOUT24_URL = 'https://www.autoscout24.ch/de/s/seller-2328369'
+export const AUTOSCOUT24_SELLER_URL = 'https://www.autoscout24.ch/de/s/seller-2328369'
 

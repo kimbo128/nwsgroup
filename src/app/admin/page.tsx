@@ -14,7 +14,6 @@ import { FadeIn } from "@/components/animations/fade-in"
 import { 
   Upload, 
   Settings, 
-  RefreshCw, 
   Image as ImageIcon,
   Save,
   Loader2
@@ -26,7 +25,6 @@ export default function AdminPage() {
   const router = useRouter()
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [syncing, setSyncing] = useState(false)
   const [galleryImages, setGalleryImages] = useState<any[]>([])
   const [settings, setSettings] = useState<any>({})
   const [uploading, setUploading] = useState(false)
@@ -86,29 +84,6 @@ export default function AdminPage() {
       fetchSettings()
     }
   }, [isAdmin])
-
-  const handleSync = async () => {
-    setSyncing(true)
-    try {
-      const response = await fetch("/api/vehicles/sync", {
-        method: "POST",
-      })
-      const data = await response.json()
-      if (response.ok && data.success) {
-        alert(`Sync erfolgreich!\n\nErstellt: ${data.stats.created}\nAktualisiert: ${data.stats.updated}\nAls verkauft markiert: ${data.stats.markedAsSold}\nGefunden: ${data.stats.fetched}`)
-      } else {
-        const errorMsg = data.error || data.message || "Unbekannter Fehler"
-        alert(`Fehler beim Sync:\n\n${errorMsg}${data.details ? `\n\nDetails:\n${data.details}` : ""}`)
-        console.error("Sync error:", data)
-      }
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : "Unbekannter Fehler"
-      alert(`Fehler beim Sync:\n\n${errorMsg}`)
-      console.error("Sync error:", error)
-    } finally {
-      setSyncing(false)
-    }
-  }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -177,53 +152,16 @@ export default function AdminPage() {
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold">Admin-Bereich</h1>
           <p className="mt-2 text-muted-foreground">
-            Verwalten Sie Fahrzeuge, Galerie und Einstellungen
+            Verwalten Sie Galerie und Einstellungen
           </p>
         </div>
       </FadeIn>
 
-      <Tabs defaultValue="sync" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="sync">AutoScout Sync</TabsTrigger>
+      <Tabs defaultValue="gallery" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="gallery">Galerie</TabsTrigger>
           <TabsTrigger value="settings">Einstellungen</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="sync">
-          <FadeIn>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <RefreshCw className="h-5 w-5" />
-                  Fahrzeuge von AutoScout24 synchronisieren
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Klicken Sie auf den Button, um die Fahrzeuge von AutoScout24 manuell zu synchronisieren.
-                  Dies aktualisiert alle Fahrzeuge in der Datenbank.
-                </p>
-                <Button 
-                  onClick={handleSync} 
-                  disabled={syncing}
-                  className="w-full sm:w-auto"
-                >
-                  {syncing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Synchronisiere...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="mr-2 h-4 w-4" />
-                      Jetzt synchronisieren
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-          </FadeIn>
-        </TabsContent>
 
         <TabsContent value="gallery">
           <FadeIn>
