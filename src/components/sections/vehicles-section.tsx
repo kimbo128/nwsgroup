@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -5,39 +7,41 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { FadeIn } from "@/components/animations/fade-in"
 import { AUTOSCOUT24_URL } from "@/lib/constants"
-import { prisma } from "@/lib/db"
+import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
-export const dynamic = 'force-dynamic'
+interface Vehicle {
+  id: string
+  make: string
+  model: string
+  price: number
+  year: number
+  mileage: number
+  fuel: string
+  images: string[]
+  featured: boolean
+}
 
-export async function VehiclesSection() {
-  // Fetch featured vehicles
-  let vehicles: Array<{
-    id: string
-    make: string
-    model: string
-    price: number
-    year: number
-    mileage: number
-    fuel: string
-    images: string[]
-    featured: boolean
-  }> = []
-  
-  try {
-    vehicles = await prisma.vehicle.findMany({
-    where: {
-      status: "available",
-      featured: true,
-    },
-      take: 4,
-      orderBy: {
-        createdAt: "desc",
-      },
-    })
-  } catch (error) {
-    console.error("Error fetching vehicles:", error)
-    // Return empty array if database is not available during build
-    vehicles = []
+export function VehiclesSection() {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchVehicles()
+  }, [])
+
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch("/api/vehicles?featured=true&limit=4")
+      if (response.ok) {
+        const data = await response.json()
+        setVehicles(data)
+      }
+    } catch (error) {
+      console.error("Error fetching vehicles:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -97,6 +101,7 @@ export async function VehiclesSection() {
                       </Button>
                     </CardFooter>
                   </Card>
+                  </motion.div>
                 </FadeIn>
               ))}
             </div>

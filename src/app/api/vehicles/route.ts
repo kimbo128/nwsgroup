@@ -8,12 +8,14 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get("status") || "available"
     const featured = searchParams.get("featured")
+    const limit = searchParams.get("limit")
 
     const vehicles = await prisma.vehicle.findMany({
       where: {
         status: status === "all" ? undefined : status,
         featured: featured === "true" ? true : undefined,
       },
+      take: limit ? parseInt(limit) : undefined,
       orderBy: {
         createdAt: "desc",
       },
