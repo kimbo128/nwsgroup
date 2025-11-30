@@ -30,11 +30,11 @@ export function Services() {
 
             return (
               <FadeIn key={service.id} delay={index * 0.1} direction="scale">
-                <motion.div
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Card className="h-full transition-shadow hover:shadow-lg">
+                  <motion.div
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                  <Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 group">
                     <CardHeader className="p-4 sm:p-6">
                       <div className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-primary/10">
                         <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />

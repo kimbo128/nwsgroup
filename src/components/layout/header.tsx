@@ -38,7 +38,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
-        <nav className="flex h-14 sm:h-16 items-center justify-between rounded-lg sm:rounded-xl border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm mt-2 sm:mt-3 px-3 sm:px-4">
+          <nav className="flex h-14 sm:h-16 items-center justify-between rounded-xl sm:rounded-2xl border-2 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-modern-lg mt-2 sm:mt-3 px-3 sm:px-4 ring-1 ring-black/5">
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0">
           <Image

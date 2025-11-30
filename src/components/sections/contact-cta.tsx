@@ -7,13 +7,17 @@ import { MessageCircle, Mail } from "lucide-react"
 
 export function ContactCTA() {
   return (
-    <section className="bg-gradient-to-r from-primary to-primary/90 py-12 sm:py-16 md:py-20 text-primary-foreground">
-      <div className="container mx-auto px-4 sm:px-6 text-center">
+    <section className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/90 py-12 sm:py-16 md:py-20 text-primary-foreground overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl"></div>
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center">
         <FadeIn>
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
             Haben Sie Fragen?
           </h2>
-          <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl px-2">
+          <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl px-2 opacity-95">
             Kontaktieren Sie uns - wir helfen Ihnen gerne weiter!
           </p>
           <div className="flex flex-col items-stretch sm:items-center justify-center gap-3 sm:gap-4 sm:flex-row max-w-md sm:max-w-none mx-auto">
