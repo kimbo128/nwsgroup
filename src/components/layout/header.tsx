@@ -40,15 +40,14 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
         <nav className="flex h-14 sm:h-16 items-center justify-between rounded-lg sm:rounded-xl border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm mt-2 sm:mt-3 px-3 sm:px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
+        <Link href="/" className="flex items-center flex-shrink-0">
           <Image
             src="/logo.png"
             alt="NWS Group AG Logo"
-            width={40}
-            height={40}
-            className="h-8 w-8 sm:h-10 sm:w-10 object-contain"
+            width={60}
+            height={60}
+            className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 object-contain"
           />
-          <span className="hidden font-bold text-sm sm:text-base md:inline-block">NWS Group AG</span>
         </Link>
 
         {/* Desktop Navigation */}
