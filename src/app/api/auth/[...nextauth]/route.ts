@@ -1,20 +1,10 @@
 import NextAuth from "next-auth"
 import { authOptions } from "@/lib/auth"
-import type { NextRequest } from "next/server"
 
 const handler = NextAuth(authOptions)
 
-export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ nextauth: string[] }> }
-) {
-  return handler(req as any, context as any)
-}
-
-export async function POST(
-  req: NextRequest,
-  context: { params: Promise<{ nextauth: string[] }> }
-) {
-  return handler(req as any, context as any)
-}
+// @ts-expect-error - NextAuth v5 Beta type compatibility
+export const GET = handler
+// @ts-expect-error - NextAuth v5 Beta type compatibility
+export const POST = handler
 
