@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react"
 import { LOCATIONS } from "@/lib/constants"
-import "leaflet/dist/leaflet.css"
 
 // Fix for default marker icon in Next.js
 import L from "leaflet"
