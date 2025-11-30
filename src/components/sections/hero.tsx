@@ -17,7 +17,8 @@ export function Hero() {
             src="/header.png"
             alt="NWS Group AG"
             fill
-            className="object-cover object-center scale-105 transition-transform duration-700 hover:scale-100"
+            className="object-cover object-center"
+            style={{ objectPosition: 'center center' }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
