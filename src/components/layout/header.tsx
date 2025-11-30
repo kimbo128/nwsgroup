@@ -38,15 +38,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
-          <nav className="flex h-14 sm:h-16 items-center justify-between rounded-xl sm:rounded-2xl border-2 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-modern-lg mt-2 sm:mt-3 px-3 sm:px-4 ring-1 ring-black/5">
+          <nav className="flex h-20 sm:h-24 md:h-28 items-center justify-between rounded-xl sm:rounded-2xl border-2 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-modern-lg mt-2 sm:mt-3 px-3 sm:px-4 ring-1 ring-black/5">
         {/* Logo */}
         <Link href="/" className="flex items-center flex-shrink-0">
           <Image
             src="/logo.png"
             alt="NWS Group AG Logo"
-            width={80}
-            height={80}
-            className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 object-contain"
+            width={120}
+            height={120}
+            className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 object-contain"
           />
         </Link>
 
