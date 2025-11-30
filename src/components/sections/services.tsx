@@ -4,8 +4,9 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SERVICES } from "@/lib/constants"
 import { FadeIn } from "@/components/animations/fade-in"
-import { Car, ShoppingCart, Wrench, Users } from "lucide-react"
+import { Car, ShoppingCart, Wrench, Users, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
+import { FloatingIcon } from "@/components/animations/floating-elements"
 
 const iconMap = {
   Car,

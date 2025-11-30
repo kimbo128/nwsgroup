@@ -3,7 +3,9 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/animations/fade-in"
-import { MessageCircle, Mail } from "lucide-react"
+import { MessageCircle, Mail, Sparkles, Zap } from "lucide-react"
+import { FloatingBadge, PulseGlow } from "@/components/animations/floating-elements"
+import { Badge } from "@/components/ui/badge"
 
 export function ContactCTA() {
   return (
@@ -14,6 +16,12 @@ export function ContactCTA() {
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl"></div>
       <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center">
         <FadeIn>
+          <FloatingBadge delay={0.2}>
+            <Badge className="mb-4 glass-strong text-white border-white/30 px-4 py-1.5 text-sm font-semibold">
+              <Zap className="mr-2 h-3 w-3 inline animate-pulse" />
+              Schnelle Antwort garantiert
+            </Badge>
+          </FloatingBadge>
           <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
             Haben Sie Fragen?
           </h2>

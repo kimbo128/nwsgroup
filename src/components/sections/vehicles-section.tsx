@@ -48,9 +48,25 @@ export function VehiclesSection() {
     <section className="bg-muted/50 py-12 sm:py-16 md:py-20">
       <div className="container mx-auto px-4 sm:px-6">
         <FadeIn>
-          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-bold">
-            Unsere aktuellen Fahrzeuge
-          </h2>
+          <div className="mb-8 sm:mb-10 md:mb-12 text-center">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="inline-block"
+            >
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent">
+                Unsere aktuellen Fahrzeuge
+              </h2>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="mt-2 text-sm text-muted-foreground"
+            >
+              ✨ Täglich aktualisiert von AutoScout24
+            </motion.p>
+          </div>
         </FadeIn>
 
         {vehicles.length > 0 ? (
