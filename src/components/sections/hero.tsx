@@ -17,10 +17,7 @@ export function Hero() {
             src="/header.png"
             alt="NWS Group AG"
             fill
-            className="object-cover"
-            style={{ 
-              objectPosition: '50% center'
-            }}
+            className="object-cover object-center"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
