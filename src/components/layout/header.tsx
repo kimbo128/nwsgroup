@@ -15,7 +15,6 @@ import { useSession, signOut } from "next-auth/react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const navigation = [
-  { name: "Fahrzeuge", href: "/fahrzeuge" },
   { name: "Dienstleistungen", href: "/dienstleistungen" },
   { name: "Standorte", href: "/standorte" },
   { name: "Galerie", href: "/galerie" },
