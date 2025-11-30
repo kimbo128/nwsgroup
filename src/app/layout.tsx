@@ -7,7 +7,10 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { SessionProvider } from "@/components/providers/session-provider"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-sans"
+})
 
 export const metadata: Metadata = {
   title: "NWS Group AG - Autoankauf, Verkauf & Karosseriearbeiten",
