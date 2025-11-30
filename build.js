@@ -27,5 +27,14 @@ const { execSync } = require('child_process')
 const env = { ...process.env }
 env.NODE_OPTIONS = (env.NODE_OPTIONS || '') + ' --require ./polyfill.js'
 
+// Skip Prisma generate if already done in postinstall (faster builds)
+// Prisma generate is already run in postinstall, so we can skip it here
+// Only generate if explicitly needed
+if (process.env.FORCE_PRISMA_GENERATE === 'true') {
+  console.log('Generating Prisma Client...')
+  execSync('prisma generate', { stdio: 'inherit' })
+}
+
+console.log('Starting Next.js build...')
 execSync('next build', { stdio: 'inherit', env })
 
