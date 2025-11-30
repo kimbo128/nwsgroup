@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import type { NextRequest } from "next/server"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const token = await getToken({ req: request })
-    
-    if (!token?.sub) {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const userId = token.sub
+    const userId = session.user.id as string
 
     // Get user stats
     const [inquiries, favorites] = await Promise.all([
