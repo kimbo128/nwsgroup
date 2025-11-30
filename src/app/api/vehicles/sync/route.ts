@@ -2,6 +2,10 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import * as cheerio from "cheerio"
 
+// Force dynamic rendering to prevent build-time analysis
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const AUTOSCOUT24_SELLER_URL =
   process.env.AUTOSCOUT24_SELLER_URL ||
   "https://www.autoscout24.ch/de/s/seller-2328369"
@@ -201,8 +205,6 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
     throw error
   }
 }
-
-export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
   try {
