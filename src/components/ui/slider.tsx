@@ -1,0 +1,44 @@
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+export interface SliderProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
+  value?: [number, number]
+  onValueChange?: (value: [number, number]) => void
+}
+
+const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
+  ({ className, value, onValueChange, ...props }, ref) => {
+    const [internalValue, setInternalValue] = React.useState<[number, number]>(
+      value || [0, 100000]
+    )
+
+    const currentValue = value ?? internalValue
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = Number(e.target.value)
+      const newPair: [number, number] = [currentValue[0], newValue]
+      setInternalValue(newPair)
+      onValueChange?.(newPair)
+    }
+
+    return (
+      <div className={cn("relative flex w-full items-center", className)}>
+        <input
+          type="range"
+          min={props.min || 0}
+          max={props.max || 100000}
+          value={currentValue[1]}
+          onChange={handleChange}
+          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+          ref={ref}
+          {...props}
+        />
+      </div>
+    )
+  }
+)
+Slider.displayName = "Slider"
+
+export { Slider }
+
