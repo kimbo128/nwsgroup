@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -8,7 +10,16 @@ import { FadeIn } from "@/components/animations/fade-in"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
 import { motion } from "framer-motion"
 
+// Dynamically import Map component to avoid SSR issues
+const Map = dynamic(() => import("@/components/map"), { ssr: false })
+
 export function LocationsPreview() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <section className="py-12 sm:py-16 md:py-20">
       <div className="container mx-auto px-4 sm:px-6">
@@ -17,6 +28,15 @@ export function LocationsPreview() {
             Unsere Standorte
           </h2>
         </FadeIn>
+
+        {/* Map */}
+        {mounted && (
+          <FadeIn delay={0.2}>
+            <div className="mb-8 sm:mb-10 md:mb-12 h-[300px] sm:h-[400px] md:h-[500px] w-full overflow-hidden rounded-lg border shadow-lg">
+              <Map />
+            </div>
+          </FadeIn>
+        )}
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
           {LOCATIONS.map((location, index) => (
