@@ -124,10 +124,20 @@ async function fetchVehiclesWithPuppeteer(): Promise<VehicleData[]> {
       '--disable-gpu'
     ]
     
+    // @sparticuz/chromium API - TypeScript-safe access
+    const chromiumAny = chromium as any
+    const executablePath = chromiumAny.executablePath 
+      ? await chromiumAny.executablePath()
+      : undefined
+    
+    if (!executablePath) {
+      throw new Error('Chromium executable path not available')
+    }
+    
     browser = await puppeteer.launch({
       args: chromiumArgs,
       defaultViewport: { width: 1920, height: 1080 },
-      executablePath: await chromium.executablePath(),
+      executablePath,
       headless: true,
     })
   }
