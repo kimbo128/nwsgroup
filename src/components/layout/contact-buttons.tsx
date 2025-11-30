@@ -38,42 +38,46 @@ export function ContactButtons({ variant = "default" }: { variant?: "default" | 
         ))}
       </DropdownMenu>
 
-      {/* WhatsApp Buttons */}
-      <div className="flex gap-2">
+      {/* WhatsApp Dropdown */}
+      <DropdownMenu
+        trigger={
+          <Button variant="outline" size={isCompact ? "sm" : "default"}>
+            <MessageCircle className="h-4 w-4 mr-2" />
+            {!isCompact && "WhatsApp"}
+          </Button>
+        }
+      >
         {LOCATIONS.map((location) => (
-          <Button
-            key={`whatsapp-${location.name}`}
-            variant="outline"
-            size={isCompact ? "sm" : "default"}
-            asChild
-          >
+          <DropdownMenuItem key={`whatsapp-${location.name}`}>
             <a
               href={`https://wa.me/${location.whatsapp.replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 w-full"
             >
               <MessageCircle className="h-4 w-4" />
-              {!isCompact && <span className="hidden sm:inline">WhatsApp</span>}
+              <div>
+                <div className="font-medium">WhatsApp {location.name}</div>
+                <div className="text-xs text-muted-foreground">{location.phone}</div>
+              </div>
             </a>
-          </Button>
+          </DropdownMenuItem>
         ))}
-        <Button
-          variant="outline"
-          size={isCompact ? "sm" : "default"}
-          asChild
-        >
+        <DropdownMenuItem>
           <a
             href={`https://wa.me/${WHATSAPP_GENERAL.replace(/[^0-9]/g, "")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full"
           >
             <MessageCircle className="h-4 w-4" />
-            {!isCompact && <span className="hidden sm:inline">WhatsApp</span>}
+            <div>
+              <div className="font-medium">WhatsApp Allgemein</div>
+              <div className="text-xs text-muted-foreground">{WHATSAPP_GENERAL}</div>
+            </div>
           </a>
-        </Button>
-      </div>
+        </DropdownMenuItem>
+      </DropdownMenu>
 
       {/* Telegram Bot */}
       <Button

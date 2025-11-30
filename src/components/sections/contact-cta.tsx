@@ -7,7 +7,7 @@ import { MessageCircle } from "lucide-react"
 
 export function ContactCTA() {
   return (
-    <section className="bg-primary py-20 text-primary-foreground">
+    <section className="bg-gradient-to-r from-primary to-primary/90 py-20 text-primary-foreground">
       <div className="container mx-auto px-4 text-center">
         <FadeIn>
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
