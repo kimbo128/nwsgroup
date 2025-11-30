@@ -11,7 +11,7 @@ const nextConfig = {
   // Enable instrumentation hook to load polyfills early
   experimental: {
     instrumentationHook: true,
-    serverComponentsExternalPackages: ['cheerio'],
+    serverComponentsExternalPackages: ['cheerio', 'puppeteer-core', '@sparticuz/chromium'],
   },
   // Optimize build performance
   typescript: {
