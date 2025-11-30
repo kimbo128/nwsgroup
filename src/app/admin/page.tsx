@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,15 +31,7 @@ export default function AdminPage() {
   const [settings, setSettings] = useState<any>({})
   const [uploading, setUploading] = useState(false)
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
-    } else if (session) {
-      checkAdmin()
-    }
-  }, [status, session, router])
-
-  const checkAdmin = async () => {
+  const checkAdmin = useCallback(async () => {
     try {
       const response = await fetch("/api/admin/check")
       if (response.ok) {
@@ -54,7 +46,15 @@ export default function AdminPage() {
       console.error("Error checking admin:", error)
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login")
+    } else if (session) {
+      checkAdmin()
+    }
+  }, [status, session, router, checkAdmin])
 
   const fetchGalleryImages = async () => {
     try {
