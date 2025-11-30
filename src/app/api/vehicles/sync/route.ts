@@ -2,6 +2,16 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import * as cheerio from "cheerio"
 
+// Polyfill File for Node.js build environment
+if (typeof File === 'undefined' && typeof global !== 'undefined') {
+  // @ts-ignore
+  global.File = class File {
+    constructor(public fileBits: BlobPart[], public fileName: string, public options?: FilePropertyBag) {
+      // Minimal File polyfill for build-time
+    }
+  } as any
+}
+
 // Force dynamic rendering to prevent build-time analysis
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'

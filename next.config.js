@@ -8,6 +8,10 @@ const nextConfig = {
       },
     ],
   },
+  // Ensure API routes are not statically analyzed during build
+  experimental: {
+    serverComponentsExternalPackages: ['cheerio'],
+  },
 }
 
 module.exports = nextConfig
