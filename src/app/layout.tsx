@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${plusJakartaSans.variable} ${inter.variable} font-sans`}>
         <SessionProvider>
           <ThemeProvider
             attribute="class"

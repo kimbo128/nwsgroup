@@ -22,7 +22,7 @@ export function ContactCTA() {
               Schnelle Antwort garantiert
             </Badge>
           </FloatingBadge>
-          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+          <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-display tracking-tight">
             Haben Sie Fragen?
           </h2>
           <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl px-2 opacity-95">

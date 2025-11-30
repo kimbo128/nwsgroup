@@ -37,7 +37,7 @@ export function Hero() {
             </FloatingBadge>
 
         <FadeIn delay={0.2}>
-          <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight px-2 tracking-tight">
+          <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display leading-tight px-2 tracking-tight">
             Ihr Partner für Autoankauf,
             <br />
             <span className="bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent">-verkauf & Karosseriearbeiten</span>

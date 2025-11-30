@@ -20,7 +20,7 @@ export function Services() {
     <section className="py-12 sm:py-16 md:py-20">
       <div className="container mx-auto px-4 sm:px-6">
         <FadeIn>
-          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-bold">
+          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl md:text-4xl font-display">
             Unsere Dienstleistungen
           </h2>
         </FadeIn>

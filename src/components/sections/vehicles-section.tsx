@@ -54,7 +54,7 @@ export function VehiclesSection() {
               transition={{ duration: 3, repeat: Infinity }}
               className="inline-block"
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent">
                 Unsere aktuellen Fahrzeuge
               </h2>
             </motion.div>
