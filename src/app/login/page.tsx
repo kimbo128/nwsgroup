@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,7 +37,15 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Ungültige Anmeldedaten")
       } else {
-        router.push("/dashboard")
+        // Prüfe ob User Admin ist
+        const checkAdmin = await fetch("/api/admin/check")
+        const adminData = await checkAdmin.json()
+        
+        if (adminData.isAdmin) {
+          router.push("/dashboard")
+        } else {
+          router.push("/coming-soon")
+        }
         router.refresh()
       }
     } catch (error) {

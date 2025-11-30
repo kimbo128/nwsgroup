@@ -72,8 +72,8 @@ export default function RegisterPage() {
         throw new Error(data.error || "Registrierung fehlgeschlagen")
       }
 
-      // Success - redirect to login
-      router.push("/login?registered=true")
+      // Success - redirect to coming soon page
+      router.push("/coming-soon")
     } catch (error) {
       console.error("Registration error:", error)
       setError(

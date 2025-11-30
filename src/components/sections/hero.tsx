@@ -35,7 +35,7 @@ export function Hero() {
               An zwei Standorten in Pratteln und Dornach für Sie da
             </p>
 
-            <div className="mb-6 sm:mb-8 flex flex-col items-center gap-3 sm:gap-4 sm:flex-row">
+            <div className="mb-6 sm:mb-8 flex flex-col items-center justify-center gap-3 sm:gap-4 sm:flex-row">
               <Button size="lg" className="w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base" asChild>
                 <Link href="/kontakt?type=verkauf">
                   Auto verkaufen
