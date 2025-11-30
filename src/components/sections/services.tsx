@@ -16,10 +16,17 @@ const iconMap = {
 export function Services() {
   return (
     <section className="py-20 sm:py-28 relative overflow-hidden">
-      {/* Background decoration */}
+      {/* Background decoration - WCC Style */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: `linear-gradient(rgba(255, 68, 0, 0.2) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255, 68, 0, 0.2) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+        }} />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
@@ -29,15 +36,15 @@ export function Services() {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-4"
+              className="inline-block px-5 py-2 rounded-full bg-primary/20 border-2 border-primary/50 text-primary text-sm font-black uppercase tracking-wider mb-4 shadow-neon-orange"
             >
               Unsere Services
             </motion.span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4">
-              Was wir für Sie{" "}
-              <span className="gradient-text">tun können</span>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4">
+              WAS WIR FÜR SIE{" "}
+              <span className="gradient-custom">TUN KÖNNEN</span>
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
               Professionelle Dienstleistungen rund ums Auto - von Ankauf bis Karosseriearbeiten
             </p>
           </div>
@@ -46,36 +53,38 @@ export function Services() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {SERVICES.map((service, index) => {
             const Icon = iconMap[service.icon as keyof typeof iconMap] || Car
-            const isLarge = index === 0 || index === 3
 
             return (
               <FadeIn key={service.id} delay={index * 0.1}>
                 <motion.div
-                  whileHover={{ y: -8 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
-                  className={`group h-full ${isLarge ? 'md:row-span-1' : ''}`}
+                  className="group h-full"
                 >
                   <Link href={service.link} className="block h-full">
-                    <div className="relative h-full rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 sm:p-8 overflow-hidden transition-all duration-500 hover:border-primary/30 hover:shadow-premium-lg">
+                    <div className="relative h-full rounded-xl border-2 border-primary/30 bg-card/60 backdrop-blur-sm p-6 sm:p-8 overflow-hidden transition-all duration-500 hover:border-primary hover:shadow-custom-lg">
                       {/* Gradient overlay on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       
-                      {/* Decorative corner accent */}
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full" />
+                      {/* Custom corner accent */}
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-full" />
+                      
+                      {/* Top accent line */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-custom opacity-0 group-hover:opacity-100 transition-opacity" />
 
                       <div className="relative z-10">
                         {/* Icon */}
                         <div className="mb-6 relative">
-                          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 group-hover:from-primary/30 group-hover:to-primary/10 transition-all duration-300">
-                            <Icon className="h-7 w-7 text-primary group-hover:scale-110 transition-transform duration-300" />
+                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 border-2 border-primary/50 group-hover:from-primary/40 group-hover:to-primary/20 transition-all duration-300 shadow-neon-orange group-hover:shadow-neon-orange">
+                            <Icon className="h-8 w-8 text-primary group-hover:scale-110 transition-transform duration-300" />
                           </div>
                           
                           {/* Pulse effect */}
                           <motion.div
-                            className="absolute inset-0 w-14 h-14 rounded-2xl bg-primary/20"
+                            className="absolute inset-0 w-16 h-16 rounded-xl border-2 border-primary/50"
                             animate={{
-                              scale: [1, 1.5, 1],
-                              opacity: [0.3, 0, 0.3],
+                              scale: [1, 1.3, 1],
+                              opacity: [0.5, 0, 0.5],
                             }}
                             transition={{
                               duration: 3,
@@ -87,17 +96,17 @@ export function Services() {
 
                         {/* Content */}
                         <div className="space-y-3">
-                          <h3 className="text-xl sm:text-2xl font-display font-bold group-hover:text-primary transition-colors flex items-center gap-2">
+                          <h3 className="text-2xl sm:text-3xl font-display font-black group-hover:text-primary transition-colors flex items-center gap-2 uppercase">
                             {service.title}
-                            <ArrowUpRight className="h-5 w-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-primary" />
+                            <ArrowUpRight className="h-6 w-6 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-primary" />
                           </h3>
-                          <p className="text-muted-foreground leading-relaxed">
+                          <p className="text-muted-foreground leading-relaxed font-medium">
                             {service.description}
                           </p>
                         </div>
 
                         {/* Bottom link indicator */}
-                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-primary opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <div className="mt-6 flex items-center gap-2 text-sm font-black text-primary opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 uppercase tracking-wider">
                           <span>Mehr erfahren</span>
                           <ArrowUpRight className="h-4 w-4" />
                         </div>

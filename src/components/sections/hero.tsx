@@ -3,39 +3,48 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Phone, ArrowRight, Sparkles } from "lucide-react"
+import { Phone, ArrowRight, Zap } from "lucide-react"
 import { CONTACT_PHONE } from "@/lib/constants"
 import { motion } from "framer-motion"
 
 export function Hero() {
   return (
-    <section className="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden">
-      {/* Animated Background Gradients */}
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Animated Background - WCC Style */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-radial from-primary/20 via-transparent to-transparent"
+          className="absolute top-0 left-0 w-[600px] h-[600px] bg-neon-orange/20 rounded-full blur-[120px]"
           animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
+            scale: [1, 1.3, 1],
+            x: [0, 100, 0],
+            y: [0, 50, 0],
           }}
           transition={{
-            duration: 20,
+            duration: 8,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
           }}
         />
         <motion.div
-          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-radial from-accent/15 via-transparent to-transparent"
+          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-neon-green/20 rounded-full blur-[100px]"
           animate={{
             scale: [1.2, 1, 1.2],
-            rotate: [0, -90, 0],
+            x: [0, -100, 0],
+            y: [0, -50, 0],
           }}
           transition={{
-            duration: 25,
+            duration: 10,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
           }}
         />
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `linear-gradient(rgba(255, 68, 0, 0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255, 68, 0, 0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
       </div>
 
       {/* Main Content Container */}
@@ -47,7 +56,7 @@ export function Hero() {
           className="relative"
         >
           {/* Hero Card with Image */}
-          <div className="relative rounded-3xl overflow-hidden shadow-premium-lg">
+          <div className="relative rounded-2xl overflow-hidden shadow-custom-lg border border-primary/30">
             {/* Background Image */}
             <div className="absolute inset-0">
               <Image
@@ -58,58 +67,40 @@ export function Hero() {
                 sizes="100vw"
                 priority
               />
-              {/* Premium Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-navy-dark/90 via-navy/80 to-navy-dark/90" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+              {/* Dark Overlay with Custom Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/90 to-black/95" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
               
-              {/* Decorative Elements */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-premium" />
-              <motion.div
-                className="absolute top-10 right-10 w-32 h-32 border border-primary/20 rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.div
-                className="absolute bottom-20 left-10 w-24 h-24 border border-accent/20 rounded-full"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-              />
+              {/* Custom Accent Lines */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-custom" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-custom" />
             </div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-[70vh] flex flex-col items-center justify-center text-center text-white p-6 sm:p-10 md:p-16 lg:p-20">
-              {/* Badge */}
+            <div className="relative z-10 min-h-[80vh] flex flex-col items-center justify-center text-center text-white p-6 sm:p-10 md:p-16 lg:p-20">
+              {/* Badge - WCC Style */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
-                className="mb-6"
+                className="mb-8"
               >
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  Seit 1999 Ihr Vertrauen
+                <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 backdrop-blur-md border-2 border-primary/50 text-primary font-bold text-sm uppercase tracking-wider shadow-neon-orange">
+                  <Zap className="w-4 h-4" />
+                  Custom. Premium. Legendär.
                 </span>
               </motion.div>
 
-              {/* Main Heading */}
+              {/* Main Heading - BOLD & CUSTOM */}
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.7 }}
-                className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display leading-[1.1] tracking-tight max-w-5xl"
+                className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display leading-[1.1] tracking-tight max-w-5xl"
               >
-                Ihr Partner für{" "}
-                <span className="relative inline-block">
-                  <span className="gradient-text">Autoankauf</span>
-                  <motion.span
-                    className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-premium rounded-full"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 1, duration: 0.8 }}
-                  />
-                </span>
-                ,<br />
-                Verkauf & Karosserie
+                <span className="block mb-2">IHR PARTNER FÜR</span>
+                <span className="block gradient-custom neon-orange">AUTOANKAUF</span>
+                <span className="block">VERKAUF & KAROSSERIE</span>
               </motion.h1>
 
               {/* Subtitle */}
@@ -117,60 +108,60 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className="mb-10 text-lg sm:text-xl md:text-2xl text-white/80 max-w-2xl font-light"
+                className="mb-12 text-lg sm:text-xl md:text-2xl text-white/80 max-w-2xl font-medium"
               >
                 An zwei Standorten in{" "}
-                <span className="text-primary font-medium">Pratteln</span> und{" "}
-                <span className="text-accent font-medium">Dornach</span> für Sie da
+                <span className="text-primary font-bold">Pratteln</span> und{" "}
+                <span className="text-accent font-bold">Dornach</span> für Sie da
               </motion.p>
 
-              {/* CTA Buttons */}
+              {/* CTA Buttons - CUSTOM STYLE */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10"
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
               >
                 <Button 
-                  size="lg" 
-                  className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground h-14 px-8 text-base font-semibold rounded-xl shadow-glow transition-all duration-300 hover:shadow-glow hover:scale-105"
+                  size="xl" 
+                  className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground h-16 px-10 text-lg font-black uppercase tracking-wider rounded-xl shadow-neon-orange hover:shadow-neon-orange transition-all duration-300 hover:scale-105 btn-glow"
                   asChild
                 >
-                  <Link href="/kontakt?type=verkauf" className="flex items-center gap-2">
+                  <Link href="/kontakt?type=verkauf" className="flex items-center gap-3">
                     Auto verkaufen
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </Link>
                 </Button>
                 <Button 
-                  size="lg" 
+                  size="xl" 
                   variant="outline" 
-                  className="group h-14 px-8 text-base font-semibold rounded-xl border-2 border-white/30 bg-white/5 backdrop-blur-md text-white hover:bg-white/15 hover:border-white/50 transition-all duration-300"
+                  className="group h-16 px-10 text-lg font-black uppercase tracking-wider rounded-xl border-2 border-white/30 bg-black/40 backdrop-blur-md text-white hover:bg-black/60 hover:border-primary transition-all duration-300 hover:scale-105"
                   asChild
                 >
-                  <Link href="/fahrzeuge" className="flex items-center gap-2">
+                  <Link href="/fahrzeuge" className="flex items-center gap-3">
                     Fahrzeuge ansehen
-                    <ArrowRight className="w-5 h-5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                    <ArrowRight className="w-6 h-6 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 </Button>
               </motion.div>
 
-              {/* Phone Number */}
+              {/* Phone Number - CUSTOM */}
               <motion.a
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 0.6 }}
                 href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-                className="group flex items-center gap-3 text-lg sm:text-xl font-semibold text-white/90 hover:text-primary transition-colors"
+                className="group flex items-center gap-4 text-xl sm:text-2xl font-bold text-white hover:text-primary transition-colors"
               >
-                <span className="flex items-center justify-center w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all">
-                  <Phone className="w-5 h-5" />
+                <span className="flex items-center justify-center w-14 h-14 rounded-xl bg-primary/20 backdrop-blur-md border-2 border-primary/50 group-hover:bg-primary/30 group-hover:border-primary transition-all shadow-neon-orange">
+                  <Phone className="w-6 h-6" />
                 </span>
-                {CONTACT_PHONE}
+                <span className="neon-orange">{CONTACT_PHONE}</span>
               </motion.a>
             </div>
           </div>
 
-          {/* Bottom Stats Bar */}
+          {/* Bottom Stats Bar - WCC STYLE */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -181,21 +172,21 @@ export function Hero() {
               { value: "25+", label: "Jahre Erfahrung" },
               { value: "5000+", label: "Zufriedene Kunden" },
               { value: "2", label: "Standorte" },
-              { value: "100%", label: "Faire Preise" },
+              { value: "100%", label: "Custom Service" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2 + index * 0.1, duration: 0.5 }}
-                className="group relative overflow-hidden rounded-2xl bg-card/80 backdrop-blur-md border border-border/50 p-6 text-center hover:border-primary/30 transition-all duration-300 hover:shadow-premium"
+                className="group relative overflow-hidden rounded-xl bg-card/80 backdrop-blur-md border-2 border-primary/30 p-6 text-center hover:border-primary transition-all duration-300 hover:shadow-neon-orange"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative">
-                  <div className="text-2xl sm:text-3xl font-display font-bold gradient-text mb-1">
+                  <div className="text-3xl sm:text-4xl font-display font-black gradient-custom mb-2">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">
+                  <div className="text-xs sm:text-sm text-muted-foreground font-bold uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </div>

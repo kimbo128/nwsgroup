@@ -10,13 +10,13 @@ import { SessionProvider } from "@/components/providers/session-provider"
 const outfit = Outfit({ 
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700", "800"]
+  weight: ["400", "500", "600", "700", "800", "900"]
 })
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700", "800"]
+  weight: ["700", "800", "900"]
 })
 
 export const metadata: Metadata = {

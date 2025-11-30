@@ -51,10 +51,10 @@ export function Header() {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className={`flex h-16 sm:h-18 md:h-20 items-center justify-between rounded-2xl px-4 sm:px-6 transition-all duration-500 ${
+          className={`flex h-18 sm:h-20 md:h-22 items-center justify-between rounded-xl px-4 sm:px-6 transition-all duration-500 border-2 ${
             scrolled 
-              ? 'bg-background/95 backdrop-blur-xl shadow-premium-lg border border-border/50' 
-              : 'bg-background/60 backdrop-blur-md border border-transparent'
+              ? 'bg-black/95 backdrop-blur-xl shadow-custom-lg border-primary/50' 
+              : 'bg-black/60 backdrop-blur-md border-primary/30'
           }`}
         >
           {/* Logo */}
@@ -65,12 +65,17 @@ export function Header() {
                 alt="NWS Group AG Logo"
                 width={56}
                 height={56}
-                className="h-12 w-12 sm:h-14 sm:w-14 object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-14 w-14 sm:h-16 sm:w-16 object-contain transition-transform duration-300 group-hover:scale-110"
+              />
+              <motion.div
+                className="absolute inset-0 border-2 border-primary/50 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               />
             </div>
             <div className="hidden sm:block">
-              <span className="text-lg font-display font-bold tracking-tight">NWS Group</span>
-              <span className="block text-xs text-muted-foreground font-medium -mt-0.5">Autohandel & Karosserie</span>
+              <span className="text-xl font-display font-black tracking-tight text-white">NWS GROUP</span>
+              <span className="block text-xs text-primary font-bold uppercase tracking-wider -mt-0.5">Custom Autohandel</span>
             </div>
           </Link>
 
@@ -80,10 +85,10 @@ export function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+                className="relative px-4 py-2 text-sm font-bold text-white/80 hover:text-primary transition-colors uppercase tracking-wider group"
               >
                 {item.name}
-                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
+                <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full shadow-neon-orange" />
               </Link>
             ))}
           </div>
@@ -97,7 +102,7 @@ export function Header() {
                 size="icon"
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
-                className="h-10 w-10 rounded-xl hover:bg-accent/10"
+                className="h-10 w-10 rounded-xl hover:bg-primary/20 border border-primary/30"
               >
                 <motion.div
                   key={resolvedTheme}
@@ -108,7 +113,7 @@ export function Header() {
                   {resolvedTheme === "dark" ? (
                     <Sun className="h-5 w-5 text-primary" />
                   ) : (
-                    <Moon className="h-5 w-5" />
+                    <Moon className="h-5 w-5 text-white" />
                   )}
                 </motion.div>
               </Button>
@@ -123,8 +128,8 @@ export function Header() {
             {session ? (
               <DropdownMenu
                 trigger={
-                  <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-accent/10">
-                    <User className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-primary/20 border border-primary/30">
+                    <User className="h-5 w-5 text-white" />
                   </Button>
                 }
               >
@@ -140,7 +145,7 @@ export function Header() {
                 variant="outline" 
                 size="sm" 
                 asChild 
-                className="hidden sm:flex h-10 px-5 rounded-xl border-2 hover:border-primary hover:bg-primary/5 transition-all"
+                className="hidden sm:flex h-10 px-5 rounded-xl border-2 border-primary/50 bg-black/40 text-white hover:bg-primary/20 hover:border-primary font-bold uppercase tracking-wider text-xs transition-all"
               >
                 <Link href="/login">Anmelden</Link>
               </Button>
@@ -150,7 +155,7 @@ export function Header() {
             <Button 
               size="sm" 
               asChild 
-              className="hidden md:flex h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 shadow-glow transition-all hover:shadow-glow"
+              className="hidden md:flex h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-neon-orange hover:shadow-neon-orange font-black uppercase tracking-wider text-xs transition-all hover:scale-105"
             >
               <Link href="/kontakt?type=verkauf">Auto verkaufen</Link>
             </Button>
@@ -159,7 +164,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden h-10 w-10 rounded-xl"
+              className="lg:hidden h-10 w-10 rounded-xl border border-primary/30"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <AnimatePresence mode="wait">
@@ -171,9 +176,9 @@ export function Header() {
                   transition={{ duration: 0.2 }}
                 >
                   {mobileMenuOpen ? (
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5 text-primary" />
                   ) : (
-                    <Menu className="h-5 w-5" />
+                    <Menu className="h-5 w-5 text-white" />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -192,7 +197,7 @@ export function Header() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="lg:hidden mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8 mt-2 overflow-hidden"
           >
-            <div className="rounded-2xl border border-border/50 bg-background/95 backdrop-blur-xl shadow-premium-lg p-4 space-y-1">
+            <div className="rounded-xl border-2 border-primary/50 bg-black/95 backdrop-blur-xl shadow-custom-lg p-4 space-y-1">
               {navigation.map((item, index) => (
                 <motion.div
                   key={item.name}
@@ -202,27 +207,27 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium hover:bg-accent/10 transition-colors"
+                    className="flex items-center justify-between rounded-lg px-4 py-3 text-base font-bold uppercase tracking-wider hover:bg-primary/20 hover:text-primary transition-colors border border-transparent hover:border-primary/50"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
-                    <ChevronDown className="h-4 w-4 -rotate-90 text-muted-foreground" />
+                    <ChevronDown className="h-4 w-4 -rotate-90 text-primary" />
                   </Link>
                 </motion.div>
               ))}
               
-              <div className="pt-4 mt-4 border-t border-border/50 space-y-3">
+              <div className="pt-4 mt-4 border-t border-primary/30 space-y-3">
                 <ContactButtons variant="compact" />
                 
                 <div className="grid grid-cols-2 gap-2">
                   {!session && (
-                    <Button variant="outline" className="w-full rounded-xl" asChild>
+                    <Button variant="outline" className="w-full rounded-xl border-2 border-primary/50 bg-black/40 text-white font-bold uppercase text-xs" asChild>
                       <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                         Anmelden
                       </Link>
                     </Button>
                   )}
-                  <Button className="w-full rounded-xl bg-primary" asChild>
+                  <Button className="w-full rounded-xl bg-primary text-primary-foreground font-black uppercase text-xs shadow-neon-orange" asChild>
                     <Link href="/kontakt?type=verkauf" onClick={() => setMobileMenuOpen(false)}>
                       Auto verkaufen
                     </Link>
