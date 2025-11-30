@@ -17,7 +17,10 @@ export function Hero() {
             src="/header.png"
             alt="NWS Group AG"
             fill
-            className="object-cover w-full h-full"
+            className="object-cover"
+            style={{
+              objectPosition: 'center center'
+            }}
             sizes="100vw"
             priority
           />
