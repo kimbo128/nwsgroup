@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
-import puppeteer from "puppeteer-core"
-import chromium from "@sparticuz/chromium"
 
 // Force dynamic rendering to prevent build-time analysis
 export const dynamic = 'force-dynamic'
@@ -10,6 +8,13 @@ export const runtime = 'nodejs'
 // Increase timeout for serverless function
 export const maxDuration = 60
 
+// AutoScout24 HCI JSON Schnittstelle (offizielle API)
+// Für Seller 2328369 - muss beim AutoScout24 Support aktiviert werden
+const AUTOSCOUT24_HCI_API_URL = 
+  process.env.AUTOSCOUT24_HCI_API_URL ||
+  `https://www.autoscout24.ch/hci/feed/json/seller/2328369`
+
+// Fallback: Seller URL für Puppeteer (falls API nicht verfügbar)
 const AUTOSCOUT24_SELLER_URL =
   process.env.AUTOSCOUT24_SELLER_URL ||
   "https://www.autoscout24.ch/de/s/seller-2328369"
@@ -29,71 +34,112 @@ interface VehicleData {
   images: string[]
 }
 
-async function getBrowser() {
-  // Check if running locally (development) or on server (production)
-  const isLocal = process.env.NODE_ENV === 'development' || process.env.LOCAL_CHROME_PATH
+/**
+ * Offizielle Methode: HCI JSON Schnittstelle
+ * Diese API muss beim AutoScout24 Support aktiviert werden
+ * Kontakt: support@autoscout24.ch
+ */
+async function fetchVehiclesFromHCIAPI(): Promise<VehicleData[]> {
+  try {
+    console.log(`Fetching from HCI API: ${AUTOSCOUT24_HCI_API_URL}`)
+    
+    const response = await fetch(AUTOSCOUT24_HCI_API_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; NWSGroup/1.0)',
+        'Accept': 'application/json',
+      },
+      next: { revalidate: 0 }, // Always fetch fresh data
+    })
 
+    if (!response.ok) {
+      throw new Error(`HCI API returned ${response.status}: ${response.statusText}`)
+    }
+
+    const data = await response.json()
+    
+    // HCI JSON Format variiert - anpassen je nach tatsächlichem Format
+    // Typisches Format: { vehicles: [...] } oder direkt Array
+    const vehiclesArray = Array.isArray(data) ? data : (data.vehicles || data.items || [])
+    
+    const vehicles: VehicleData[] = vehiclesArray.map((vehicle: any) => {
+      // Mapping je nach tatsächlichem HCI JSON Format
+      return {
+        autoscoutId: vehicle.id?.toString() || vehicle.vehicleId?.toString() || `vehicle-${Date.now()}`,
+        autoscoutUrl: vehicle.url || vehicle.link || `https://www.autoscout24.ch/de/d/${vehicle.id}`,
+        make: vehicle.make || vehicle.brand || vehicle.manufacturer || 'Unbekannt',
+        model: vehicle.model || vehicle.modelName || 'Unbekannt',
+        year: vehicle.year || vehicle.constructionYear || new Date().getFullYear(),
+        price: vehicle.price || vehicle.priceAmount || vehicle.priceValue || 0,
+        mileage: vehicle.mileage || vehicle.km || vehicle.odometer || 0,
+        fuel: vehicle.fuel || vehicle.fuelType || vehicle.energyType || 'Benzin',
+        transmission: vehicle.transmission || vehicle.gearbox || vehicle.gearType || 'Manuell',
+        color: vehicle.color || vehicle.exteriorColor,
+        description: vehicle.description || vehicle.notes,
+        images: Array.isArray(vehicle.images) 
+          ? vehicle.images.map((img: any) => typeof img === 'string' ? img : img.url || img.src)
+          : vehicle.image ? [vehicle.image] : [],
+      }
+    })
+
+    console.log(`Fetched ${vehicles.length} vehicles from HCI API`)
+    return vehicles
+  } catch (error) {
+    console.error("HCI API Error:", error)
+    throw error
+  }
+}
+
+/**
+ * Fallback: Puppeteer Web Scraping (falls HCI API nicht verfügbar)
+ * WARNUNG: Kann gegen AutoScout24 Nutzungsbedingungen verstoßen!
+ */
+async function fetchVehiclesWithPuppeteer(): Promise<VehicleData[]> {
+  // Dynamischer Import um Build-Probleme zu vermeiden
+  const puppeteer = (await import("puppeteer-core")).default
+  const chromium = await import("@sparticuz/chromium")
+  
+  console.log(`Fetching from: ${AUTOSCOUT24_SELLER_URL} (Puppeteer Fallback)`)
+  
+  const isLocal = process.env.NODE_ENV === 'development' || process.env.LOCAL_CHROME_PATH
+  
+  let browser
   if (isLocal) {
-    // Local development - use local Chrome
     const executablePath = process.env.LOCAL_CHROME_PATH || 
       'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
-    
-    return puppeteer.launch({
+    browser = await puppeteer.launch({
       executablePath,
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
   } else {
-    // Production (Railway, Vercel, etc.) - use @sparticuz/chromium
-    return puppeteer.launch({
+    browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
       headless: true,
     })
   }
-}
-
-async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
-  console.log(`Fetching from: ${AUTOSCOUT24_SELLER_URL}`)
-  
-  const browser = await getBrowser()
   
   try {
     const page = await browser.newPage()
-    
-    // Set a realistic viewport
     await page.setViewport({ width: 1920, height: 1080 })
-    
-    // Set user agent to look like a real browser
     await page.setUserAgent(
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     )
-    
-    // Set extra headers
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'de-CH,de;q=0.9,en;q=0.8',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
     })
 
-    // Navigate to the page
-    console.log('Navigating to AutoScout24...')
     await page.goto(AUTOSCOUT24_SELLER_URL, { 
       waitUntil: 'networkidle2',
       timeout: 45000 
     })
-
-    // Wait for content to load
     await page.waitForSelector('body', { timeout: 10000 })
-    
-    // Small delay to let JavaScript render
     await new Promise(resolve => setTimeout(resolve, 2000))
 
-    // Extract vehicle data from the page
     const vehicles = await page.evaluate(() => {
       const results: any[] = []
-      
-      // Try multiple selectors for vehicle listings
       const selectors = [
         'article[data-testid]',
         '[data-testid="listing-card"]',
@@ -108,17 +154,13 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
         const found = document.querySelectorAll(selector)
         if (found.length > 0) {
           elements = Array.from(found)
-          console.log(`Found ${found.length} elements with selector: ${selector}`)
           break
         }
       }
 
       elements.forEach((el, index) => {
         try {
-          // Get all text content for parsing
           const allText = el.textContent || ''
-          
-          // Find links to vehicle detail pages
           const links = el.querySelectorAll('a[href*="/d/"], a[href*="/fahrzeuge/"]')
           let href = ''
           let autoscoutId = ''
@@ -127,7 +169,6 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
             const linkHref = link.getAttribute('href') || ''
             if (linkHref.includes('/d/') || linkHref.includes('/fahrzeuge/')) {
               href = linkHref
-              // Extract ID from URL
               const idMatch = linkHref.match(/\/d\/([^/?]+)/) || linkHref.match(/\/(\d+)/)
               if (idMatch) {
                 autoscoutId = idMatch[1]
@@ -145,47 +186,39 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
               ? `https://www.autoscout24.ch${href}` 
               : `https://www.autoscout24.ch/de/d/${autoscoutId}`
 
-          // Extract title/make/model
           const titleEl = el.querySelector('h2, h3, [class*="title"], [class*="Title"]')
           const title = titleEl?.textContent?.trim() || ''
           const titleParts = title.split(/\s+/)
           const make = titleParts[0] || 'Unbekannt'
           const model = titleParts.slice(1).join(' ') || 'Unbekannt'
 
-          // Extract price
           const priceEl = el.querySelector('[class*="price"], [class*="Price"], [data-testid*="price"]')
           let priceText = priceEl?.textContent || ''
-          // Also try to find price in the text
           if (!priceText) {
             const priceMatch = allText.match(/CHF\s*([\d'.,\s]+)/)
             priceText = priceMatch ? priceMatch[1] : ''
           }
           const price = parseFloat(priceText.replace(/[^\d]/g, '')) || 0
 
-          // Extract year
           const yearMatch = allText.match(/\b(19|20)\d{2}\b/)
           const year = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear()
 
-          // Extract mileage
           const mileageMatch = allText.match(/([\d'.\s]+)\s*km/i)
           const mileage = mileageMatch 
             ? parseInt(mileageMatch[1].replace(/['\s.]/g, '')) 
             : 0
 
-          // Extract fuel type
           let fuel = 'Benzin'
           const fuelText = allText.toLowerCase()
           if (fuelText.includes('diesel')) fuel = 'Diesel'
           else if (fuelText.includes('elektro') || fuelText.includes('electric')) fuel = 'Elektro'
           else if (fuelText.includes('hybrid')) fuel = 'Hybrid'
 
-          // Extract transmission
           let transmission = 'Manuell'
           if (fuelText.includes('automatik') || fuelText.includes('automatic') || fuelText.includes('automat')) {
             transmission = 'Automatik'
           }
 
-          // Extract images
           const images: string[] = []
           el.querySelectorAll('img').forEach(img => {
             const src = img.src || img.getAttribute('data-src') || img.getAttribute('data-lazy-src')
@@ -196,7 +229,6 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
             }
           })
 
-          // Only add if we have minimum required data
           if (make && make !== 'Unbekannt' && price > 0) {
             results.push({
               autoscoutId,
@@ -220,27 +252,41 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
     })
 
     console.log(`Extracted ${vehicles.length} vehicles from page`)
-    
-    // If no vehicles found, try to get page content for debugging
-    if (vehicles.length === 0) {
-      const pageContent = await page.content()
-      console.log('Page content length:', pageContent.length)
-      
-      // Check if we're blocked or on wrong page
-      if (pageContent.includes('blocked') || pageContent.includes('captcha')) {
-        throw new Error('Page appears to be blocked or requires captcha')
-      }
-    }
-
     return vehicles
   } finally {
     await browser.close()
   }
 }
 
+/**
+ * Hauptfunktion: Versucht zuerst HCI API, dann Puppeteer Fallback
+ */
+async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
+  // Versuche zuerst die offizielle HCI API
+  if (process.env.AUTOSCOUT24_USE_HCI_API !== 'false') {
+    try {
+      return await fetchVehiclesFromHCIAPI()
+    } catch (hciError) {
+      console.warn("HCI API failed, falling back to Puppeteer:", hciError)
+      // Fallback zu Puppeteer nur wenn explizit erlaubt
+      if (process.env.AUTOSCOUT24_ALLOW_PUPPETEER === 'true') {
+        return await fetchVehiclesWithPuppeteer()
+      }
+      throw new Error(`HCI API nicht verfügbar. Bitte kontaktieren Sie AutoScout24 Support (support@autoscout24.ch) für API-Zugang. Fehler: ${hciError instanceof Error ? hciError.message : 'Unknown'}`)
+    }
+  }
+  
+  // Fallback zu Puppeteer (nur wenn explizit aktiviert)
+  if (process.env.AUTOSCOUT24_ALLOW_PUPPETEER === 'true') {
+    return await fetchVehiclesWithPuppeteer()
+  }
+  
+  throw new Error("Keine Sync-Methode aktiviert. Bitte HCI API aktivieren oder Puppeteer explizit erlauben.")
+}
+
 export async function POST(request: Request) {
   try {
-    console.log("Starting vehicle sync from AutoScout24 with Puppeteer...")
+    console.log("Starting vehicle sync from AutoScout24...")
     console.log(`Using URL: ${AUTOSCOUT24_SELLER_URL}`)
 
     let vehicles: VehicleData[]
@@ -253,6 +299,7 @@ export async function POST(request: Request) {
         {
           success: false,
           error: `Failed to fetch vehicles: ${fetchError instanceof Error ? fetchError.message : "Unknown error"}`,
+          hint: "Für die offizielle HCI API kontaktieren Sie: support@autoscout24.ch",
         },
         { status: 500 }
       )
@@ -334,6 +381,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: "Sync completed",
+      method: process.env.AUTOSCOUT24_USE_HCI_API !== 'false' ? 'HCI API' : 'Puppeteer',
       stats: {
         fetched: vehicles.length,
         created,
@@ -357,6 +405,7 @@ export async function POST(request: Request) {
         success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === "development" ? errorStack : undefined,
+        hint: "Für die offizielle HCI API kontaktieren Sie: support@autoscout24.ch",
       },
       { status: 500 }
     )
@@ -368,5 +417,7 @@ export async function GET() {
   return NextResponse.json({
     message: "Use POST to trigger sync",
     endpoint: "/api/vehicles/sync",
+    officialMethod: "HCI JSON Schnittstelle - Kontakt: support@autoscout24.ch",
+    currentMethod: process.env.AUTOSCOUT24_USE_HCI_API !== 'false' ? 'HCI API (offiziell)' : 'Puppeteer (Fallback)',
   })
 }
