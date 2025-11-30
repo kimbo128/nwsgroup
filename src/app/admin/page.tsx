@@ -94,14 +94,17 @@ export default function AdminPage() {
         method: "POST",
       })
       const data = await response.json()
-      if (data.success) {
-        alert(`Sync erfolgreich! ${data.stats.created} erstellt, ${data.stats.updated} aktualisiert`)
+      if (response.ok && data.success) {
+        alert(`Sync erfolgreich!\n\nErstellt: ${data.stats.created}\nAktualisiert: ${data.stats.updated}\nAls verkauft markiert: ${data.stats.markedAsSold}\nGefunden: ${data.stats.fetched}`)
       } else {
-        alert(`Fehler: ${data.error}`)
+        const errorMsg = data.error || data.message || "Unbekannter Fehler"
+        alert(`Fehler beim Sync:\n\n${errorMsg}${data.details ? `\n\nDetails:\n${data.details}` : ""}`)
+        console.error("Sync error:", data)
       }
     } catch (error) {
-      alert("Fehler beim Sync")
-      console.error(error)
+      const errorMsg = error instanceof Error ? error.message : "Unbekannter Fehler"
+      alert(`Fehler beim Sync:\n\n${errorMsg}`)
+      console.error("Sync error:", error)
     } finally {
       setSyncing(false)
     }

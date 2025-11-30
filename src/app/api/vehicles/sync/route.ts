@@ -27,18 +27,35 @@ interface VehicleData {
 
 async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
   try {
+    console.log(`Fetching from: ${AUTOSCOUT24_SELLER_URL}`)
+    
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+    
     const response = await fetch(AUTOSCOUT24_SELLER_URL, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "de-CH,de;q=0.9,en;q=0.8",
       },
+      signal: controller.signal,
     })
 
+    clearTimeout(timeoutId)
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.status}`)
+      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
     }
 
     const html = await response.text()
+    
+    if (!html || html.length < 100) {
+      throw new Error("Received empty or invalid HTML response")
+    }
+    
+    console.log(`Received ${html.length} bytes of HTML`)
+    
     const $ = cheerio.load(html)
 
     const vehicles: VehicleData[] = []
@@ -208,21 +225,41 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
 
 export async function POST(request: Request) {
   try {
-    // Optional: Add authentication/authorization check here
-    // const authHeader = request.headers.get("authorization")
-    // if (authHeader !== `Bearer ${process.env.SYNC_SECRET}`) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    // }
-
     console.log("Starting vehicle sync from AutoScout24...")
+    console.log(`Using URL: ${AUTOSCOUT24_SELLER_URL}`)
 
-    const vehicles = await fetchVehiclesFromAutoScout24()
-    console.log(`Fetched ${vehicles.length} vehicles from AutoScout24`)
+    let vehicles: VehicleData[]
+    try {
+      vehicles = await fetchVehiclesFromAutoScout24()
+      console.log(`Fetched ${vehicles.length} vehicles from AutoScout24`)
+    } catch (fetchError) {
+      console.error("Error fetching vehicles:", fetchError)
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Failed to fetch vehicles: ${fetchError instanceof Error ? fetchError.message : "Unknown error"}`,
+        },
+        { status: 500 }
+      )
+    }
 
     // Get all current vehicle IDs from database
-    const existingVehicles = await prisma.vehicle.findMany({
-      select: { autoscoutId: true },
-    })
+    let existingVehicles
+    try {
+      existingVehicles = await prisma.vehicle.findMany({
+        select: { autoscoutId: true },
+      })
+    } catch (dbError) {
+      console.error("Database error:", dbError)
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Database error: ${dbError instanceof Error ? dbError.message : "Unknown error"}`,
+        },
+        { status: 500 }
+      )
+    }
+
     const existingIds = new Set(existingVehicles.map((v) => v.autoscoutId))
     const fetchedIds = new Set(vehicles.map((v) => v.autoscoutId))
 
@@ -291,10 +328,20 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Sync error:", error)
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    const errorStack = error instanceof Error ? error.stack : undefined
+    
+    console.error("Error details:", {
+      message: errorMessage,
+      stack: errorStack,
+      name: error instanceof Error ? error.name : undefined,
+    })
+    
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: errorMessage,
+        details: process.env.NODE_ENV === "development" ? errorStack : undefined,
       },
       { status: 500 }
     )
