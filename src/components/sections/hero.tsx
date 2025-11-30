@@ -10,24 +10,22 @@ import { motion } from "framer-motion"
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center py-20 sm:py-24">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/header.png"
-          alt="NWS Group AG"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
-      </div>
-
-      {/* Boxed Content Container */}
+    <section className="relative min-h-screen w-full flex items-center justify-center py-20 sm:py-24">
+      {/* Boxed Image Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/20 bg-background/10 backdrop-blur-md shadow-2xl p-6 sm:p-8 md:p-12 lg:p-16">
+        <div className="relative rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/20 bg-background/10 backdrop-blur-md shadow-2xl overflow-hidden aspect-[16/9] min-h-[500px] sm:min-h-[600px]">
+          {/* Background Image */}
+          <Image
+            src="/header.png"
+            alt="NWS Group AG"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+          
           {/* Content */}
-          <div className="flex flex-col items-center justify-center text-center text-white">
+          <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-6 sm:p-8 md:p-12 lg:p-16">
         <FadeIn delay={0.2}>
           <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2">
             Ihr Partner für Autoankauf,
