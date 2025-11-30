@@ -13,12 +13,6 @@ export async function GET(request: NextRequest) {
 
     const userId = token.sub
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const userId = session.user.id as string
-
     // Get user stats
     const [inquiries, favorites] = await Promise.all([
       prisma.inquiry.count({
