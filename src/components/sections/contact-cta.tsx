@@ -17,21 +17,21 @@ export function ContactCTA() {
             Kontaktieren Sie uns - wir helfen Ihnen gerne weiter!
           </p>
           <div className="flex flex-col items-stretch sm:items-center justify-center gap-3 sm:gap-4 sm:flex-row max-w-md sm:max-w-none mx-auto">
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base" asChild>
-              <a href="mailto:info@nwsgroup.ch">
-                <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+            <Button size="lg" variant="secondary" className="w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base inline-flex items-center justify-center" asChild>
+              <a href="mailto:info@nwsgroup.ch" className="inline-flex items-center justify-center">
+                <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                 E-Mail schreiben
               </a>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base"
+              className="bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto h-11 sm:h-12 text-sm sm:text-base inline-flex items-center justify-center"
               asChild
             >
-              <Link href="/kontakt">
-                <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                Kontakt
+              <Link href="/kontakt" className="inline-flex items-center justify-center">
+                <MessageCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                WhatsApp Chat
               </Link>
             </Button>
           </div>
