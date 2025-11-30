@@ -42,7 +42,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'verkauf',
-    title: 'Gebrauchtwagenverkauf',
+    title: 'Gebrauchtwagen Verkauf',
     description: 'Geprüfte Fahrzeuge in bester Qualität zu attraktiven Preisen.',
     icon: 'ShoppingCart',
     link: '/dienstleistungen#verkauf',

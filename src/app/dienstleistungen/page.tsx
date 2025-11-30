@@ -100,7 +100,7 @@ export default function DienstleistungenPage() {
         </FadeIn>
       </section>
 
-      {/* Gebrauchtwagenverkauf */}
+      {/* Gebrauchtwagen Verkauf */}
       <section id="verkauf" className="mb-20 scroll-mt-20">
         <FadeIn>
           <div className="mb-8 flex items-center gap-4">
@@ -108,7 +108,7 @@ export default function DienstleistungenPage() {
               <ShoppingCart className="h-8 w-8 text-primary" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold">Gebrauchtwagenverkauf</h2>
+              <h2 className="text-3xl font-bold">Gebrauchtwagen Verkauf</h2>
               <p className="text-muted-foreground">
                 Geprüfte Fahrzeuge in bester Qualität zu attraktiven Preisen
               </p>
