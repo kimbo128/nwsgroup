@@ -66,15 +66,20 @@ export default function RegisterPage() {
         }),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.error || "Registrierung fehlgeschlagen")
       }
 
+      // Success - redirect to login
       router.push("/login?registered=true")
     } catch (error) {
+      console.error("Registration error:", error)
       setError(
-        error instanceof Error ? error.message : "Ein Fehler ist aufgetreten"
+        error instanceof Error 
+          ? error.message 
+          : "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
       )
     } finally {
       setIsLoading(false)
