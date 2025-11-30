@@ -11,16 +11,13 @@ export function Hero() {
     <section className="relative min-h-screen w-full flex items-center justify-center py-20 sm:py-24">
       {/* Boxed Image Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="relative rounded-2xl sm:rounded-3xl border border-white/30 bg-background/10 backdrop-blur-xl shadow-2xl overflow-hidden aspect-[16/9] min-h-[700px] sm:min-h-[800px] md:min-h-[900px] ring-1 ring-white/20">
+        <div className="relative rounded-2xl sm:rounded-3xl border border-white/30 bg-background/10 backdrop-blur-xl shadow-2xl overflow-hidden w-full min-h-[700px] sm:min-h-[800px] md:min-h-[900px] ring-1 ring-white/20">
           {/* Background Image */}
           <Image
             src="/header.png"
             alt="NWS Group AG"
             fill
-            className="object-cover"
-            style={{
-              objectPosition: 'center center'
-            }}
+            className="object-cover object-center"
             sizes="100vw"
             priority
           />
