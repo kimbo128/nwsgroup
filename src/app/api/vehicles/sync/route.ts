@@ -112,8 +112,20 @@ async function fetchVehiclesWithPuppeteer(): Promise<VehicleData[]> {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
   } else {
+    // Production - use @sparticuz/chromium
+    const chromiumArgs = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu'
+    ]
+    
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: chromiumArgs,
       defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
       headless: true,
