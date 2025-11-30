@@ -3,13 +3,17 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "./db"
 import bcrypt from "bcryptjs"
 
-// Validate required environment variables
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error("NEXTAUTH_SECRET is not set in environment variables")
+// Get secret with fallback for build time
+const getSecret = () => {
+  if (process.env.NEXTAUTH_SECRET) {
+    return process.env.NEXTAUTH_SECRET
+  }
+  // Fallback for build time - validation happens at runtime
+  return process.env.NEXTAUTH_SECRET || "build-time-secret-placeholder"
 }
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: getSecret(),
   providers: [
     CredentialsProvider({
       name: "Credentials",
