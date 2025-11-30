@@ -23,13 +23,25 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData()
-    const files = formData.getAll("images") as File[]
-    const category = formData.get("category") as string || "fahrzeuge"
+    const files = formData.getAll("images")
+    const category = (formData.get("category") as string) || "fahrzeuge"
 
     // For now, we'll store URLs. In production, upload to cloud storage (S3, R2, etc.)
     const uploadedImages = []
 
-    for (const file of files) {
+    for (const fileEntry of files) {
+      // Type guard: check if it's a File-like object
+      if (
+        typeof fileEntry !== "object" ||
+        fileEntry === null ||
+        typeof (fileEntry as any).arrayBuffer !== "function" ||
+        typeof (fileEntry as any).name !== "string" ||
+        typeof (fileEntry as any).type !== "string"
+      ) {
+        continue
+      }
+      
+      const file = fileEntry as { arrayBuffer: () => Promise<ArrayBuffer>; name: string; type: string }
       // Convert to base64 or upload to storage service
       // This is a simplified version - in production, use proper file storage
       const bytes = await file.arrayBuffer()
