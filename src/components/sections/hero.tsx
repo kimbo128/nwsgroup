@@ -35,13 +35,13 @@ export function Hero() {
                 src="/header.png"
                 alt="NWS Group AG"
                 fill
-                className="object-cover object-center"
+                className="object-cover object-center brightness-105"
                 sizes="100vw"
                 priority
               />
-              {/* Professional Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/30" />
+              {/* Light Overlay - Bild soll klar sichtbar sein */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/30 to-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
             </div>
 
             {/* Content */}
@@ -51,7 +51,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.7 }}
-                className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight max-w-4xl"
+                className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight max-w-4xl text-white drop-shadow-2xl"
               >
                 Ihr Partner für{" "}
                 <span className="text-primary">Autoankauf</span>,<br />
@@ -63,7 +63,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="mb-10 text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl font-medium"
+                className="mb-10 text-lg sm:text-xl md:text-2xl text-white/90 max-w-2xl font-medium drop-shadow-lg"
               >
                 An zwei Standorten in Pratteln und Dornach für Sie da
               </motion.p>
@@ -104,7 +104,7 @@ export function Hero() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
                 href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-                className="group flex items-center gap-3 text-lg sm:text-xl font-semibold text-foreground hover:text-primary transition-colors"
+                className="group flex items-center gap-3 text-lg sm:text-xl font-semibold text-white hover:text-primary transition-colors drop-shadow-lg"
               >
                 <span className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
                   <Phone className="w-5 h-5 text-primary" />
