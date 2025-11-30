@@ -13,20 +13,16 @@ export function Hero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="relative rounded-2xl sm:rounded-3xl border border-white/30 bg-background/10 backdrop-blur-xl shadow-2xl overflow-hidden aspect-[16/9] min-h-[700px] sm:min-h-[800px] md:min-h-[900px] ring-1 ring-white/20">
           {/* Background Image */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Image
-              src="/header.png"
-              alt="NWS Group AG"
-              fill
-              className="object-cover"
-              style={{ 
-                objectPosition: 'center center',
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }}
-              priority
-            />
-          </div>
+          <Image
+            src="/header.png"
+            alt="NWS Group AG"
+            fill
+            className="object-cover"
+            style={{ 
+              objectPosition: '50% center'
+            }}
+            priority
+          />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
           
           {/* Content */}
