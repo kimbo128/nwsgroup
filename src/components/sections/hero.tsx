@@ -17,7 +17,8 @@ export function Hero() {
             src="/header.png"
             alt="NWS Group AG"
             fill
-            className="object-cover object-center"
+            className="object-cover w-full h-full"
+            sizes="100vw"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" />
