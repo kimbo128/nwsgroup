@@ -8,8 +8,9 @@ const nextConfig = {
       },
     ],
   },
-  // Ensure API routes are not statically analyzed during build
+  // Enable instrumentation hook to load polyfills early
   experimental: {
+    instrumentationHook: true,
     serverComponentsExternalPackages: ['cheerio'],
   },
 }
