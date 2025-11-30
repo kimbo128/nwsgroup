@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { LOCATIONS } from "@/lib/constants"
 import { FadeIn } from "@/components/animations/fade-in"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { motion } from "framer-motion"
 
 export function LocationsPreview() {
   return (
@@ -19,7 +20,11 @@ export function LocationsPreview() {
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
           {LOCATIONS.map((location, index) => (
-            <FadeIn key={location.name} delay={index * 0.2}>
+            <FadeIn key={location.name} delay={index * 0.2} direction="scale">
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.2 }}
+              >
               <Card>
                 <CardHeader className="p-4 sm:p-6">
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -63,6 +68,7 @@ export function LocationsPreview() {
                   </Button>
                 </CardContent>
               </Card>
+              </motion.div>
             </FadeIn>
           ))}
         </div>

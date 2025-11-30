@@ -29,9 +29,9 @@ export function Services() {
             const Icon = iconMap[service.icon as keyof typeof iconMap] || Car
 
             return (
-              <FadeIn key={service.id} delay={index * 0.1}>
+              <FadeIn key={service.id} delay={index * 0.1} direction="scale">
                 <motion.div
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
                   <Card className="h-full transition-shadow hover:shadow-lg">

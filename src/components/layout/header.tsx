@@ -44,9 +44,9 @@ export function Header() {
           <Image
             src="/logo.png"
             alt="NWS Group AG Logo"
-            width={60}
-            height={60}
-            className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 object-contain"
+            width={80}
+            height={80}
+            className="h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 object-contain"
           />
         </Link>
 

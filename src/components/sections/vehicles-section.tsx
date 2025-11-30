@@ -53,7 +53,11 @@ export async function VehiclesSection() {
           <>
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
               {vehicles.map((vehicle, index) => (
-                <FadeIn key={vehicle.id} delay={index * 0.1}>
+                <FadeIn key={vehicle.id} delay={index * 0.1} direction="scale">
+                  <motion.div
+                    whileHover={{ y: -5, scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                  >
                   <Card className="overflow-hidden transition-shadow hover:shadow-lg">
                     <div className="relative h-40 sm:h-48 w-full">
                       {vehicle.images.length > 0 ? (

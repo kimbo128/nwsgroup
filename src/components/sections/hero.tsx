@@ -10,7 +10,7 @@ import { motion } from "framer-motion"
 
 export function Hero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center py-20 sm:py-24">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -23,8 +23,11 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center text-white">
+      {/* Boxed Content Container */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="rounded-lg sm:rounded-xl lg:rounded-2xl border border-white/20 bg-background/10 backdrop-blur-md shadow-2xl p-6 sm:p-8 md:p-12 lg:p-16">
+          {/* Content */}
+          <div className="flex flex-col items-center justify-center text-center text-white">
         <FadeIn delay={0.2}>
           <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2">
             Ihr Partner für Autoankauf,
@@ -60,14 +63,16 @@ export function Hero() {
           </a>
         </FadeIn>
 
-        {/* Scroll Down Animation */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ChevronDown className="h-8 w-8 text-white" />
-        </motion.div>
+            {/* Scroll Down Animation */}
+            <motion.div
+              className="mt-8 sm:mt-12"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <ChevronDown className="h-8 w-8 text-white" />
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   )

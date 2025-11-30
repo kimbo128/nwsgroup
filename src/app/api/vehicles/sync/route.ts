@@ -40,72 +40,148 @@ async function fetchVehiclesFromAutoScout24(): Promise<VehicleData[]> {
     const vehicles: VehicleData[] = []
 
     // Parse vehicle listings from AutoScout24 HTML
-    // Note: This is a simplified parser - adjust based on actual HTML structure
-    $(".cldt-summary-full-item").each((index, element) => {
+    // Try multiple selectors for robustness
+    const selectors = [
+      ".cldt-summary-full-item",
+      "[data-item-name='cldt-summary-full-item']",
+      ".cldt-summary-full-item-main",
+      "article[data-vehicle-id]",
+      ".cldt-summary-full-item-main article",
+    ]
+
+    let foundElements = $()
+    for (const selector of selectors) {
+      foundElements = $(selector)
+      if (foundElements.length > 0) {
+        console.log(`Found ${foundElements.length} vehicles using selector: ${selector}`)
+        break
+      }
+    }
+
+    // Fallback: try to find any article or listing element
+    if (foundElements.length === 0) {
+      foundElements = $("article, [data-vehicle-id], .listing-item, .vehicle-item")
+      console.log(`Fallback: Found ${foundElements.length} potential vehicle elements`)
+    }
+
+    foundElements.each((index, element) => {
       try {
         const $el = $(element)
 
-        // Extract vehicle ID from URL or data attribute
-        const linkElement = $el.find("a").first()
+        // Extract vehicle ID from URL, data attribute, or generate one
+        let autoscoutId = $el.attr("data-vehicle-id") || 
+                         $el.attr("data-id") ||
+                         $el.find("[data-vehicle-id]").attr("data-vehicle-id")
+        
+        const linkElement = $el.find("a[href*='/fahrzeuge/'], a[href*='/de/d/']").first()
         const href = linkElement.attr("href") || ""
-        const autoscoutId =
-          href.match(/\/(\d+)/)?.[1] || `vehicle-${index}-${Date.now()}`
-        const autoscoutUrl = href.startsWith("http")
+        
+        if (!autoscoutId && href) {
+          const idMatch = href.match(/\/(\d+)/)
+          autoscoutId = idMatch ? idMatch[1] : `vehicle-${index}-${Date.now()}`
+        } else if (!autoscoutId) {
+          autoscoutId = `vehicle-${index}-${Date.now()}`
+        }
+
+        const autoscoutUrl = href && href.startsWith("http")
           ? href
-          : `https://www.autoscout24.ch${href}`
+          : href
+          ? `https://www.autoscout24.ch${href}`
+          : `https://www.autoscout24.ch/de/d/${autoscoutId}`
 
-        // Extract make and model
-        const title = $el.find(".cldt-summary-title").text().trim()
-        const [make, ...modelParts] = title.split(" ")
-        const model = modelParts.join(" ")
+        // Extract make and model - try multiple selectors
+        const titleSelectors = [
+          ".cldt-summary-title",
+          "h2",
+          "[data-vehicle-title]",
+          ".vehicle-title",
+          "a[href*='/fahrzeuge/']",
+        ]
+        let title = ""
+        for (const sel of titleSelectors) {
+          title = $el.find(sel).first().text().trim()
+          if (title) break
+        }
+        
+        if (!title) {
+          title = $el.text().substring(0, 100).trim()
+        }
 
-        // Extract price
-        const priceText = $el.find(".cldt-price").text().trim()
-        const price = parseFloat(
-          priceText.replace(/[^\d,.]/g, "").replace(",", ".")
-        ) || 0
+        const titleParts = title.split(/\s+/)
+        const make = titleParts[0] || "Unbekannt"
+        const model = titleParts.slice(1).join(" ") || "Unbekannt"
 
-        // Extract year
-        const yearText = $el.find(".cldt-summary-vehicle-data").first().text()
-        const yearMatch = yearText.match(/(\d{4})/)
-        const year = yearMatch ? parseInt(yearMatch[1]) : new Date().getFullYear()
+        // Extract price - try multiple selectors
+        const priceSelectors = [
+          ".cldt-price",
+          "[data-price]",
+          ".price",
+          ".vehicle-price",
+        ]
+        let priceText = ""
+        for (const sel of priceSelectors) {
+          priceText = $el.find(sel).first().text().trim()
+          if (priceText) break
+        }
+        
+        const price = priceText
+          ? parseFloat(priceText.replace(/[^\d,.]/g, "").replace(",", ".")) || 0
+          : 0
+
+        // Extract year - try to find in various places
+        const allText = $el.text()
+        const yearMatch = allText.match(/\b(19|20)\d{2}\b/)
+        const year = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear()
 
         // Extract mileage
-        const mileageText = $el
-          .find(".cldt-summary-vehicle-data")
-          .eq(1)
-          .text()
-        const mileageMatch = mileageText.match(/([\d.]+)\s*km/i)
+        const mileageMatch = allText.match(/([\d.'\s]+)\s*km/i)
         const mileage = mileageMatch
-          ? parseInt(mileageMatch[1].replace(/\./g, ""))
+          ? parseInt(mileageMatch[1].replace(/[.'\s]/g, ""))
           : 0
 
         // Extract fuel type
-        const fuelText = $el.find(".cldt-summary-vehicle-data").text()
         let fuel = "Benzin"
-        if (fuelText.includes("Diesel")) fuel = "Diesel"
-        else if (fuelText.includes("Elektro")) fuel = "Elektro"
-        else if (fuelText.includes("Hybrid")) fuel = "Hybrid"
+        const fuelText = allText.toLowerCase()
+        if (fuelText.includes("diesel")) fuel = "Diesel"
+        else if (fuelText.includes("elektro") || fuelText.includes("electric")) fuel = "Elektro"
+        else if (fuelText.includes("hybrid")) fuel = "Hybrid"
+        else if (fuelText.includes("benzin") || fuelText.includes("petrol") || fuelText.includes("gasoline")) fuel = "Benzin"
 
         // Extract transmission
         let transmission = "Manuell"
-        if (fuelText.includes("Automatik")) transmission = "Automatik"
+        if (fuelText.includes("automatik") || fuelText.includes("automatic")) transmission = "Automatik"
 
-        // Extract images
+        // Extract images - try multiple selectors
         const images: string[] = []
-        $el.find("img").each((_, img) => {
-          const src = $(img).attr("src") || $(img).attr("data-src")
-          if (src && !src.includes("placeholder")) {
-            images.push(src.startsWith("http") ? src : `https:${src}`)
-          }
-        })
+        const imageSelectors = [
+          "img[src*='autoscout24'], img[data-src*='autoscout24']",
+          "img",
+          "[data-image-src]",
+        ]
+        
+        for (const sel of imageSelectors) {
+          $el.find(sel).each((_, img) => {
+            const src = $(img).attr("src") || 
+                       $(img).attr("data-src") || 
+                       $(img).attr("data-image-src") ||
+                       $(img).attr("data-lazy-src")
+            if (src && !src.includes("placeholder") && !src.includes("logo") && !src.includes("icon")) {
+              const fullUrl = src.startsWith("http") ? src : src.startsWith("//") ? `https:${src}` : `https://www.autoscout24.ch${src}`
+              if (!images.includes(fullUrl)) {
+                images.push(fullUrl)
+              }
+            }
+          })
+          if (images.length > 0) break
+        }
 
-        if (make && model && price > 0) {
+        // Only add if we have minimum required data
+        if (make && make !== "Unbekannt" && price > 0) {
           vehicles.push({
             autoscoutId,
             autoscoutUrl,
             make,
-            model,
+            model: model || "Unbekannt",
             year,
             price,
             mileage,
