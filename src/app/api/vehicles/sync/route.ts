@@ -177,7 +177,7 @@ export async function POST(request: Request) {
             data: {
               ...vehicle,
               lastSynced: new Date(),
-              status: vehicle.status || "available",
+              status: "available",
             },
           })
           updated++

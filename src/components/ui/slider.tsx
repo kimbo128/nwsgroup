@@ -2,24 +2,23 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface SliderProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
-  value?: [number, number]
-  onValueChange?: (value: [number, number]) => void
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "onChange"> {
+  value?: number
+  onValueChange?: (value: number) => void
 }
 
 const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
   ({ className, value, onValueChange, ...props }, ref) => {
-    const [internalValue, setInternalValue] = React.useState<[number, number]>(
-      value || [0, 100000]
+    const [internalValue, setInternalValue] = React.useState<number>(
+      value || 0
     )
 
     const currentValue = value ?? internalValue
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = Number(e.target.value)
-      const newPair: [number, number] = [currentValue[0], newValue]
-      setInternalValue(newPair)
-      onValueChange?.(newPair)
+      setInternalValue(newValue)
+      onValueChange?.(newValue)
     }
 
     return (
@@ -28,7 +27,7 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
           type="range"
           min={props.min || 0}
           max={props.max || 100000}
-          value={currentValue[1]}
+          value={currentValue}
           onChange={handleChange}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           ref={ref}

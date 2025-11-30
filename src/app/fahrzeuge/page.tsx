@@ -45,6 +45,19 @@ export default function FahrzeugePage() {
     fuel: "",
   })
 
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch("/api/vehicles")
+      const data = await response.json()
+      setVehicles(data)
+      setFilteredVehicles(data)
+    } catch (error) {
+      console.error("Error fetching vehicles:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     fetchVehicles()
   }, [])
