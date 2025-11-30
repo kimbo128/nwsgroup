@@ -15,6 +15,7 @@ import {
   LogOut,
   Car,
   MessageSquare,
+  Settings,
 } from "lucide-react"
 import { signOut } from "next-auth/react"
 
@@ -26,6 +27,7 @@ export default function DashboardPage() {
     nextAppointment: null as string | null,
     favorites: 0,
   })
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -36,8 +38,21 @@ export default function DashboardPage() {
   useEffect(() => {
     if (session) {
       fetchStats()
+      checkAdmin()
     }
   }, [session])
+
+  const checkAdmin = async () => {
+    try {
+      const response = await fetch("/api/admin/check")
+      if (response.ok) {
+        const data = await response.json()
+        setIsAdmin(data.isAdmin)
+      }
+    } catch (error) {
+      console.error("Error checking admin:", error)
+    }
+  }
 
   const fetchStats = async () => {
     try {
@@ -175,6 +190,14 @@ export default function DashboardPage() {
                   Profil
                 </Link>
               </Button>
+              {isAdmin && (
+                <Button variant="ghost" className="justify-start text-primary" asChild>
+                  <Link href="/admin">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Admin-Bereich
+                  </Link>
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 className="justify-start text-destructive"
