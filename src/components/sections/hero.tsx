@@ -23,8 +23,8 @@ export function Hero() {
         {/* Light mode: almost invisible overlay. Dark mode: slightly visible to ensure text contrast */}
         <div className="absolute inset-0 bg-black/10 dark:bg-black/30 mix-blend-multiply" />
         
-        {/* Bottom Gradient - Starts much lower (50%) to keep top clear */}
-        <div className="absolute bottom-0 left-0 right-0 h-[60%] bg-gradient-to-t from-background via-background/60 to-transparent" />
+        {/* Bottom Gradient - Starts much lower (40%) to keep top clear */}
+        <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-background via-background/60 to-transparent" />
         
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.05] dark:opacity-[0.1]" />
       </div>
