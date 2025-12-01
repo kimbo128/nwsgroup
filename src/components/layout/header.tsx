@@ -9,9 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ContactButtons } from "./contact-buttons"
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useSession, signOut } from "next-auth/react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -116,20 +114,20 @@ export function Header() {
 
             {/* User Menu / Login */}
             {session ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenu
+                align="end"
+                trigger={
                   <Button variant="ghost" size="icon" className="h-9 w-9 rounded-none">
                     <User className="h-5 w-5" />
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard">Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => signOut()}>
-                    Abmelden
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
+                }
+              >
+                <Link href="/dashboard" className="block w-full">
+                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                </Link>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  Abmelden
+                </DropdownMenuItem>
               </DropdownMenu>
             ) : (
               <Button 
