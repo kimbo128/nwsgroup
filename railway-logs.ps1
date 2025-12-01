@@ -33,3 +33,5 @@ try {
 Write-Host "`nUm die Logs für ein bestimmtes Projekt abzurufen, benötige ich die Projekt-ID." -ForegroundColor Cyan
 Write-Host "Du kannst die Projekt-ID in der Railway-Weboberfläche finden." -ForegroundColor Cyan
 
+
+

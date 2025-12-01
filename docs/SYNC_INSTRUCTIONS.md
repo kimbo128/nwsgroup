@@ -177,3 +177,5 @@ if (authHeader !== `Bearer ${process.env.SYNC_SECRET}`) {
 
 Dann setze `SYNC_SECRET` in Railway Environment Variables.
 
+
+

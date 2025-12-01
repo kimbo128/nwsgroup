@@ -2,8 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { MapPin, Phone, Mail, Clock, ArrowRight, Facebook, Instagram, Linkedin } from "lucide-react"
-import { motion } from "framer-motion"
+import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react"
 import { CONTACT_PHONE, CONTACT_EMAIL, LOCATIONS } from "@/lib/constants"
 
 const quickLinks = [
@@ -23,7 +22,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative border-t bg-muted/30">
+    <footer className="relative border-t-2 border-muted-foreground/10 bg-muted/5">
       <div className="container mx-auto px-4 sm:px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
@@ -34,49 +33,30 @@ export function Footer() {
                 alt="NWS Group AG"
                 width={56}
                 height={56}
-                className="h-14 w-14 object-contain group-hover:scale-105 transition-transform"
+                className="h-14 w-14 object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
               />
               <div>
-                <span className="text-xl font-bold block">NWS Group</span>
-                <span className="text-sm text-muted-foreground">Autohandel & Karosserie</span>
+                <span className="text-xl font-black uppercase tracking-tighter block">NWS Group</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">Automotive</span>
               </div>
             </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              Ihr vertrauenswürdiger Partner für Autoankauf, -verkauf und professionelle Karosseriearbeiten in der Region Basel.
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6 font-medium">
+              Ihr Partner für Autoankauf, -verkauf und professionelle Karosseriearbeiten.
             </p>
-            
-            {/* Social Links */}
-            <div className="flex items-center gap-3">
-              {[
-                { icon: Facebook, href: "#", label: "Facebook" },
-                { icon: Instagram, href: "#", label: "Instagram" },
-                { icon: Linkedin, href: "#", label: "LinkedIn" },
-              ].map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  whileHover={{ y: -2 }}
-                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted hover:bg-primary/10 transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
-                </motion.a>
-              ))}
-            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold mb-6">Navigation</h4>
+            <h4 className="text-sm font-black uppercase tracking-widest mb-6 text-foreground">Navigation</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="group inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wide"
                   >
+                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
                     <span>{link.name}</span>
-                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 </li>
               ))}
@@ -85,15 +65,15 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-sm font-semibold mb-6">Kontakt</h4>
+            <h4 className="text-sm font-black uppercase tracking-widest mb-6 text-foreground">Kontakt</h4>
             <ul className="space-y-4">
               <li>
                 <a
                   href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
                   className="group flex items-start gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Phone className="w-5 h-5 mt-0.5 text-primary" />
-                  <span>{CONTACT_PHONE}</span>
+                  <Phone className="w-5 h-5 mt-0.5 text-foreground group-hover:text-primary transition-colors" />
+                  <span className="font-bold tracking-wide">{CONTACT_PHONE}</span>
                 </a>
               </li>
               <li>
@@ -101,13 +81,13 @@ export function Footer() {
                   href={`mailto:${CONTACT_EMAIL}`}
                   className="group flex items-start gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Mail className="w-5 h-5 mt-0.5 text-primary" />
-                  <span>{CONTACT_EMAIL}</span>
+                  <Mail className="w-5 h-5 mt-0.5 text-foreground group-hover:text-primary transition-colors" />
+                  <span className="font-bold tracking-wide">{CONTACT_EMAIL}</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
-                <Clock className="w-5 h-5 mt-0.5 text-primary" />
-                <div>
+                <Clock className="w-5 h-5 mt-0.5 text-foreground" />
+                <div className="font-medium">
                   <p>Mo-Fr: 08:00 - 18:00</p>
                   <p>Sa: 08:00 - 16:00</p>
                 </div>
@@ -117,16 +97,16 @@ export function Footer() {
 
           {/* Locations */}
           <div>
-            <h4 className="text-sm font-semibold mb-6">Standorte</h4>
-            <ul className="space-y-4">
+            <h4 className="text-sm font-black uppercase tracking-widest mb-6 text-foreground">Standorte</h4>
+            <ul className="space-y-6">
               {LOCATIONS.map((location) => (
                 <li key={location.id}>
-                  <div className="flex items-start gap-3 text-sm text-muted-foreground">
-                    <MapPin className="w-5 h-5 mt-0.5 text-primary flex-shrink-0" />
+                  <div className="flex items-start gap-3 text-sm text-muted-foreground group">
+                    <MapPin className="w-5 h-5 mt-0.5 text-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-foreground">{location.name}</p>
-                      <p>{location.address}</p>
-                      <p>{location.zip} {location.city}</p>
+                      <p className="font-black text-foreground uppercase tracking-wide">{location.name}</p>
+                      <p className="font-medium">{location.address}</p>
+                      <p className="font-medium">{location.zip} {location.city}</p>
                     </div>
                   </div>
                 </li>
@@ -137,18 +117,18 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t">
+      <div className="border-t-2 border-muted-foreground/10">
         <div className="container mx-auto px-4 sm:px-6 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">
-              © {currentYear} NWS Group AG. Alle Rechte vorbehalten.
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              © {currentYear} NWS Group AG.
             </p>
             <div className="flex items-center gap-6">
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-widest transition-colors"
                 >
                   {link.name}
                 </Link>

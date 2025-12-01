@@ -12,3 +12,5 @@ npx prisma db push --accept-data-loss
 
 echo "Migrations completed successfully!"
 
+
+

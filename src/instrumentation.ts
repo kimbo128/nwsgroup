@@ -23,3 +23,5 @@ export async function register() {
   // File polyfill is already set above, so this is just for clarity
 }
 
+
+
