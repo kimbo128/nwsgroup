@@ -56,22 +56,20 @@ export function Header() {
               : 'bg-background/40 backdrop-blur-md border-white/5 sm:rounded-none sm:border-none'
           }`}
         >
-          {/* Logo */}
+          {/* Logo - LARGE & STANDALONE */}
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="relative">
-              <div className="absolute -inset-2 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative transition-transform duration-300 hover:scale-105">
+              <div className="absolute -inset-4 bg-primary/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <Image
                 src="/logo.png"
                 alt="NWS Group AG Logo"
-                width={52}
-                height={52}
-                className="relative h-12 w-12 sm:h-14 sm:w-14 object-contain"
+                width={80}
+                height={80}
+                className="relative h-16 w-16 sm:h-20 sm:w-20 object-contain"
+                priority
               />
             </div>
-            <div className="hidden md:block">
-              <span className="text-xl font-black tracking-tighter uppercase block leading-none italic">NWS Group</span>
-              <span className="text-[10px] font-bold text-primary tracking-[0.3em] uppercase block mt-1">Customs</span>
-            </div>
+            {/* Text removed as requested */}
           </Link>
 
           {/* Desktop Navigation */}

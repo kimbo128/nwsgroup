@@ -31,14 +31,11 @@ export function Footer() {
               <Image
                 src="/logo.png"
                 alt="NWS Group AG"
-                width={56}
-                height={56}
-                className="h-14 w-14 object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                width={96}
+                height={96}
+                className="h-24 w-24 object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
               />
-              <div>
-                <span className="text-xl font-black uppercase tracking-tighter block">NWS Group</span>
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">Automotive</span>
-              </div>
+              {/* Text removed as requested */}
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed mb-6 font-medium">
               Ihr Partner für Autoankauf, -verkauf und professionelle Karosseriearbeiten.

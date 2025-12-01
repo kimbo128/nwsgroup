@@ -19,9 +19,9 @@ export function Hero() {
           sizes="100vw"
           priority
         />
-        {/* Aggressive Overlays for Depth */}
-        <div className="absolute inset-0 bg-black/50 dark:bg-black/70 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        {/* Aggressive Overlays for Depth - REDUCED OPACITY as requested */}
+        <div className="absolute inset-0 bg-black/30 dark:bg-black/50 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.05] dark:opacity-[0.1]" />
       </div>
 
