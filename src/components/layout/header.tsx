@@ -192,7 +192,7 @@ export function Header() {
               
               <div className="pt-6 mt-6 border-t border-border/50 space-y-4">
                 <div className="px-4">
-                  <ContactButtons variant="full" />
+                  <ContactButtons />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3 px-4">
